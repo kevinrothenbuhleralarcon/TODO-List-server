@@ -8,6 +8,8 @@ const todoManagement = require("./routes/todo")
 // Middleware
 app.use(express.json())
 
-app.get("/", usersManagement.index)
+app.post("/register", usersManagement.registerUser)
 
-app.listen(process.env.PORT)
+app.listen(process.env.PORT, () => {
+    console.log("Server started")
+})
