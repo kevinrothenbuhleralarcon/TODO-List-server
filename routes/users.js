@@ -4,7 +4,7 @@ const userDao = require("../data/userDao")
 const User = require("../model/User")
 
 /**
- * 
+ * Register a new user and return an authentication token
  * @param {Request} req 
  * @param {Response} res 
  */
@@ -63,4 +63,22 @@ exports.registerUser = async function(req, res) {
         console.log(e.sqlMessage)
     } 
     
+}
+
+/**
+ * Delete an existing user
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+exports.deleteUser = async function(req, res) {
+    const {id} = req.body
+    if (!id) {
+        return res.status(400).send("Id not valid")
+    }
+    const nbUserDeleted = await userDao.deleteUser(id)
+    if (nbUserDeleted > 0) {
+        res.status(201).send("User deleted")
+    } else {
+        res.status(400).send("No users with this id")
+    }    
 }

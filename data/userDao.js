@@ -86,7 +86,7 @@ exports.getUserByEmail = function(email) {
 /**
  * Create a user in the database and return the inserted id
  * @param {User} user 
- * @returns {Promise} Promise object representing the id of the inserted user
+ * @returns {Promise<(number|null)>} Promise object representing the id of the inserted user
  */
  exports.createUser = function(user) {
     return new Promise((resolve, reject) => {
@@ -121,6 +121,28 @@ exports.updateUser = function(user) {
             [user.username, user.email, user.password, user.token, user.active, user.id],
             (err, result) => {
                 if (err) reject(err)
+                resolve(result)
+            }
+        )
+    })
+}
+
+
+// DELETE
+
+/**
+ * Delete a user
+ * @param {number} id 
+ * @returns {Promise<number>} Return the number of row deleted
+ */
+exports.deleteUser = function(id) {
+    return new Promise((resolve, reject) => {
+        connection.execute(
+            "DELETE FROM tbl_users WHERE id = ?",
+            [id],
+            (err, result) => {
+                if (err) reject(err)
+                console.log(result)
                 resolve(result)
             }
         )

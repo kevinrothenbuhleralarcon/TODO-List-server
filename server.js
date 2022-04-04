@@ -9,6 +9,7 @@ const todoManagement = require("./routes/todo")
 app.use(express.json())
 
 app.post("/register", usersManagement.registerUser)
+app.post("/deleteUser", usersManagement.deleteUser)
 
 app.listen(process.env.PORT, () => {
     console.log("Server started")
