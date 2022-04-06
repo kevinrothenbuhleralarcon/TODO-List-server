@@ -1,3 +1,5 @@
+/* AUTHOR: Kevin Rothenbühler-Alarcon */
+
 const connection = require("../config/database")
 const User = require("../model/User")
 
@@ -142,7 +144,6 @@ exports.deleteUser = function(id) {
             [id],
             (err, result) => {
                 if (err) reject(err)
-                console.log(result)
                 resolve(result)
             }
         )

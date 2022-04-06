@@ -1,10 +1,12 @@
+/* AUTHOR: Kevin Rothenbühler-Alarcon */
+
 const bcrypt = require("bcryptjs")
 const jsonWebToken = require("jsonwebtoken")
 const userDao = require("../data/userDao")
 const User = require("../model/User")
 
 /**
- * Register a new user and return an authentication token
+ * Register a new user and send an authentication token
  * @param {Request} req 
  * @param {Response} res 
  */
@@ -39,29 +41,45 @@ exports.registerUser = async function(req, res) {
             null,
             true
         ))
-
+        
+        // Get the user previously created, generate the token and update the user with the token
         const user = await userDao.getUserById(id)
-
-        const token = jsonWebToken.sign(
-            {user_id: id, email},
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: process.env.TOKEN_LIFE
-            }
-        )
-
+        const token = generateToken(user.id, user.email)
         user.token = token
         userDao.updateUser(user)
 
-        res.status(201)
-        res.json({
-            "username" : user.username,
-            "token-lifetime" : process.env.TOKEN_LIFE,
-            "token" : user.token
-        })
+        // Return the a success to the user with the username, token lifetime and the token
+        res.status(201).json(generateJsonResponseWithToken(user.username, user.token))
     } catch (e) {
-        console.log(e.sqlMessage)
+        res.status(500).send("Server error")
     } 
+}
+
+/**
+ * Login an existing user and send an authentication token
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+exports.loginUser = async function(req, res) {
+    try {
+        const {username, password} = req.body
+        if(!(username && password)) {
+            return res.status(400).send("All input are required")
+        }
+
+        const user = await userDao.getUserByUsername(username)
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const token = generateToken(user.id, user.email)
+            user.token = token
+            userDao.updateUser(user)
+
+            return res.status(200).json(generateJsonResponseWithToken(user.username, user.token))
+        }
+
+        res.status(400).send("Invalid Credential")
+    } catch (e) {
+        res.status(500).send("Server error")
+    }
     
 }
 
@@ -71,14 +89,48 @@ exports.registerUser = async function(req, res) {
  * @param {Response} res 
  */
 exports.deleteUser = async function(req, res) {
-    const {id} = req.body
-    if (!id) {
-        return res.status(400).send("Id not valid")
+    try {
+        const {id} = req.body
+        if (!id) {
+            return res.status(400).send("Id not valid")
+        }
+        const nbUserDeleted = await userDao.deleteUser(id)
+        if (nbUserDeleted > 0) {
+            res.status(200).send("User deleted")
+        } else {
+            res.status(400).send("No users with this id")
+        }    
+    } catch (e) {
+        res.status(500).send("Server error")
     }
-    const nbUserDeleted = await userDao.deleteUser(id)
-    if (nbUserDeleted > 0) {
-        res.status(201).send("User deleted")
-    } else {
-        res.status(400).send("No users with this id")
-    }    
+   
+}
+
+/**
+ * Generate a token from the user id and email
+ * @param {Number} id 
+ * @param {String} email 
+ * @returns {String} token
+ */
+const generateToken = function (id, email) {
+    return jsonWebToken.sign(
+        {user_id: id, email},
+        process.env.TOKEN_KEY,
+        {
+            expiresIn: process.env.TOKEN_LIFE
+        })
+}
+
+/**
+ * 
+ * @param {String} username 
+ * @param {String} token 
+ * @returns {JSON} Json response
+ */
+const generateJsonResponseWithToken = function (username, token) {
+    return {
+        "username" : username,
+        "token-lifetime" : process.env.TOKEN_LIFE,
+        "token" : token
+    }
 }

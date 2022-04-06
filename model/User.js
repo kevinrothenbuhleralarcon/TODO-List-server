@@ -1,3 +1,5 @@
+/* AUTHOR: Kevin Rothenbühler-Alarcon */
+
 /** Class representing a User */
 class User {
 
