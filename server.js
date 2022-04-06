@@ -9,12 +9,20 @@ const auth = require("./middleware/auth")
 
 // Middleware
 app.use(express.json())
+app.use("/static", express.static("public"))
 
-app.post("/register", usersManagement.registerUser)
-app.post("/login", usersManagement.loginUser)
-app.post("/deleteUser", usersManagement.deleteUser)
+// API
+app.get("/api/todoList", auth, todoManagement.getTodoList)
 
-app.get("/todoList", auth, todoManagement.getTodoList)
+app.post("/api/register", usersManagement.registerUser)
+app.post("/api/login", usersManagement.loginUser)
+app.post("/api/deleteUser", usersManagement.deleteUser)
+
+// Web client entry point
+app.get("/*", (req, res) => {
+    res.sendFile(__dirname+"/public/index.html")
+})
+
 
 app.listen(process.env.PORT, () => {
     console.log("Server started")
