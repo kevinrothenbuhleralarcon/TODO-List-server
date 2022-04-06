@@ -1,5 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
+import About from "./views/about.js"
+
 const routes = [  
     { 
         path: '/',
@@ -8,8 +10,7 @@ const routes = [
     },
     { 
         path: '/about', 
-        data: `<h1>Welcome to About page.</h1>      
-        <p>The About page is the section of a website where people go to find out about the website they're on.</p>`
+        data: About
     },
     { 
         path: '/contact', 
@@ -24,16 +25,24 @@ const root = document.querySelector("#root")
  * Add the content of the path to the main page
  * @param {string} path
  */
-const addContent = function (path) {
+const addContent = async function (path) {
     let route = routes.find(route => route.path == path)
-    root.innerHTML = route.data
+    console.log(route)
+    if (route.path === "/about") {
+        const view = new route.data()
+        console.log("about")
+        root.innerHTML = await view.getHtml()
+    } else {
+        root.innerHTML = route.data
+    }
+    
 }
 
 /**
  * Function that handle the page navigation
  * @param {Event} e 
  */
-const router = function (e) {
+function router (e) {
     e.preventDefault()
     const path = e.target.getAttribute("href")
     window.history.pushState({}, "newUrl", e.target.href) // Add the url to the navigation history
@@ -44,4 +53,9 @@ const router = function (e) {
 window.addEventListener("popstate", () => addContent(window.location.pathname))
 window.addEventListener("DOMContentLoaded", () => {
     addContent(window.location.pathname)
+})
+
+const links = document.querySelectorAll("a")
+links.forEach(link => {
+    link.addEventListener("click", router)
 })
