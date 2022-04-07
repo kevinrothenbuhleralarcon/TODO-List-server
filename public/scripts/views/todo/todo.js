@@ -2,9 +2,9 @@
 
 import AbstractView from "../abstractView.js"
 
-export default class Login extends AbstractView {
+export default class Todo extends AbstractView {
     constructor() {
-        super("Login")
+        super("Todo")
     }
 
     /**
@@ -12,7 +12,7 @@ export default class Login extends AbstractView {
      * @returns {Promise<String>}
      */
     async getHtml() {
-        const response = await fetch("./static/scripts/views/auth/login.html")
+        const response = await fetch("./static/scripts/views/todo/todo.html")
         const htmlContent = await response.text()
         return htmlContent  
     }
@@ -23,7 +23,7 @@ export default class Login extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
-        const button = document.querySelector("#submit")
+        /*const button = document.querySelector("#submit")
         const form = document.querySelector("#login")
         if(!(button && form)) return
         button.addEventListener("click", (e) => {
@@ -31,12 +31,12 @@ export default class Login extends AbstractView {
             if ((form.username.value === "") || (form.password.value === "")) {
                 return console.log("Form invalid")
             }
-            this.#loginApi(form, router)
+            this.#loginApi(form, router)*/
             /*const data = {
                 username: form.username.value
             }
             router("/about")*/
-        })
+       // })
     }    
 
     async #loginApi(form, router) {
@@ -52,6 +52,6 @@ export default class Login extends AbstractView {
             body: JSON.stringify(data)
         })
         let responseData = await response.json()
-        router("/todo")
+        console.log(responseData)
     }
 }

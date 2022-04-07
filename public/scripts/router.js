@@ -1,6 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
 import Login from "./views/auth/login.js"
+import Todo from "./views/todo/todo.js"
 
 const routes = [  
     { 
@@ -8,12 +9,16 @@ const routes = [
         view: Login
     },
     { 
-        path: '/about', 
+        path: '/register', 
         view: Login
+    },
+    { 
+        path: '/todo', 
+        view: Todo
     }
 ]
 
-const root = document.querySelector("#root")
+const pageContent = document.querySelector("#page-content")
 
 /**
  * Add the content of the path to the main page
@@ -23,7 +28,7 @@ const loadPageContent = async function (path) {
     let route = routes.find(route => route.path == path)
     if (route) {
         const view = new route.view()
-        root.innerHTML = await view.getHtml()
+        pageContent.innerHTML = await view.getHtml()
         await view.executeViewScript(router)
 
     } else {
