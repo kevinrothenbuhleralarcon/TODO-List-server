@@ -51,9 +51,9 @@ exports.registerUser = async function(req, res) {
 
         // Return the a success to the user with the username, token lifetime and the token
         res.cookie("x-access-token", token, {
-            maxAge: process.env.TOKEN_LIFE,
-            secure: false,
-            httpOnly: false
+            maxAge: process.env.TOKEN_LIFE * 36000 * 60,
+            secure: true,
+            httpOnly: true
         })
         res.status(201).json(generateJsonResponseWithToken(user.username, user.token))
     } catch (e) {

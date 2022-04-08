@@ -36,7 +36,7 @@ export default class Rejister extends AbstractView {
         submitButton.addEventListener("click", (e) => {
             e.preventDefault()
 
-            if ((form.username.value === "") || (form.email.value === "") || (form.password.value === "")) {
+            if ((form.username.value === "") || (form.email.value === "") || (form.password.value === "") || (form.password2.value === "") || (form.password.value !== form.password2.value)) {
                 /* TODO Show form validation error to the user */
                 return console.log("Form invalid")
             }
