@@ -1,21 +1,13 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
 import Login from "./views/auth/login.js"
+import Register from "./views/auth/register.js"
 import Todo from "./views/todo/todo.js"
 
 const routes = [  
-    { 
-        path: '/',
-        view: Login
-    },
-    { 
-        path: '/register', 
-        view: Login
-    },
-    { 
-        path: '/todo', 
-        view: Todo
-    }
+    { path: '/', view: Login },
+    { path: '/register', view: Register },
+    { path: '/todo', view: Todo }
 ]
 
 const pageContent = document.querySelector("#page-content")
@@ -45,16 +37,10 @@ function router (path) {
     loadPageContent(path)
 }
 
-// Hander the navigte back and forward
+// Handel the navigate back and forward
 window.addEventListener("popstate", () => loadPageContent(window.location.pathname))
+
+// Handel the page reload
 window.addEventListener("DOMContentLoaded", () => {
     loadPageContent(window.location.pathname)
-})
-
-const links = document.querySelectorAll("a")
-links.forEach(link => {
-    link.addEventListener("click", (e) => {
-        e.preventDefault()
-        router(e.target.getAttribute("href"))
-    })
 })

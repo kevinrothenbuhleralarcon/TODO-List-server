@@ -3,6 +3,10 @@
 import AbstractView from "../abstractView.js"
 
 export default class Login extends AbstractView {
+
+    /**
+     * Constructor
+     */
     constructor() {
         super("Login")
     }
@@ -18,7 +22,7 @@ export default class Login extends AbstractView {
     }
 
     /**
-     * 
+     * The script of the view, the router is there for navigation
      * @param {import("../abstractView.js").navigateCallback} router 
      * @returns 
      */
@@ -29,16 +33,14 @@ export default class Login extends AbstractView {
         button.addEventListener("click", (e) => {
             e.preventDefault()
             if ((form.username.value === "") || (form.password.value === "")) {
+                /* TODO Show form validation error to the user */
                 return console.log("Form invalid")
             }
             this.#loginApi(form, router)
-            /*const data = {
-                username: form.username.value
-            }
-            router("/about")*/
         })
     }    
 
+    /* TO BE EXTRACTED IN A SEPARATE FILE FOR API REQUEST */
     async #loginApi(form, router) {
         const data =  {
             "username": form.username.value,
@@ -51,7 +53,11 @@ export default class Login extends AbstractView {
             },
             body: JSON.stringify(data)
         })
-        let responseData = await response.json()
-        router("/todo")
+        if(response.ok) {
+            router("/todo")
+        } else {
+            /* TODO Show form validation error from the server to the user */
+            return console.log("invalid data")
+        }        
     }
 }
