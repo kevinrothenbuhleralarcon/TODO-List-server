@@ -115,7 +115,6 @@ exports.deleteUser = async function(req, res) {
     } catch (e) {
         res.status(500).send("Server error")
     }
-   
 }
 
 /**
@@ -142,7 +141,7 @@ const generateToken = function (id, email) {
 const generateJsonResponseWithToken = function (username, token) {
     return {
         "username" : username,
-        "token-lifetime" : process.env.TOKEN_LIFE,
+        "token-lifetime" : process.env.TOKEN_LIFE + "h",
         "token" : token
     }
 }
