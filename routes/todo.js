@@ -7,5 +7,5 @@
  */
 exports.getTodoList = function (req, res) {
     const userId = req.userId
-    res.status(200).send(`Todo list for user: ${userId}`)
+    res.status(200).json({"title": `Todo list for user: ${userId}`})
 }

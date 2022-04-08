@@ -3,12 +3,14 @@
 require ("dotenv").config()
 const express = require("express")
 const app = express()
+const cookieParser = require("cookie-parser")
 const usersManagement = require("./routes/users")
 const todoManagement = require("./routes/todo")
 const auth = require("./middleware/auth")
 
 // Middleware
 app.use(express.json())
+app.use(cookieParser())
 app.use("/static", express.static("public"))
 
 // API

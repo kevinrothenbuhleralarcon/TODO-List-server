@@ -9,7 +9,7 @@ const jsonWebToken = require("jsonwebtoken")
  * @param {NextFunction} next 
  */
 const verifyToken = (req, res, next) => {
-    const token = req.body.token || req.query.token || req.headers["x-access-token"]
+    const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.cookies["x-access-token"]
 
     if(token === undefined) {
         return res.status(401).send("An access token is required to access this resource")

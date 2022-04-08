@@ -58,9 +58,14 @@ header {
     padding: 10px;
 }
 
+.form-content input:focus {
+    z-index: 100; /* Allow the focus border to be displayed on top of other elements */
+}
+
 .form-content input.top {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    margin-bottom: -1px;
 }
 
 .form-content input.bottom {

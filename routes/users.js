@@ -48,7 +48,13 @@ exports.registerUser = async function(req, res) {
         user.token = token
         userDao.updateUser(user)
 
+
         // Return the a success to the user with the username, token lifetime and the token
+        res.cookie("x-access-token", token, {
+            maxAge: process.env.TOKEN_LIFE,
+            secure: false,
+            httpOnly: false
+        })
         res.status(201).json(generateJsonResponseWithToken(user.username, user.token))
     } catch (e) {
         res.status(500).send("Server error")
@@ -73,11 +79,17 @@ exports.loginUser = async function(req, res) {
             user.token = token
             userDao.updateUser(user)
 
+            res.cookie("x-access-token", token, {
+                maxAge: process.env.TOKEN_LIFE * 36000 * 60,
+                secure: true,
+                httpOnly: true
+            })
             return res.status(200).json(generateJsonResponseWithToken(user.username, user.token))
         }
 
         res.status(400).send("Invalid Credential")
     } catch (e) {
+        console.log(e)
         res.status(500).send("Server error")
     }
     
@@ -117,7 +129,7 @@ const generateToken = function (id, email) {
         {user_id: id, email},
         process.env.TOKEN_KEY,
         {
-            expiresIn: process.env.TOKEN_LIFE
+            expiresIn: process.env.TOKEN_LIFE + "h"
         })
 }
 
