@@ -54,7 +54,7 @@ export default class Login extends AbstractView {
             body: JSON.stringify(data)
         })
         if(response.ok) {
-            router("/todo")
+            router("/")
         } else {
             /* TODO Show form validation error from the server to the user */
             return console.log("invalid data")

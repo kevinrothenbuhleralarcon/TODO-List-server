@@ -30,7 +30,7 @@ export default class Todo extends AbstractView {
                 const h2 = document.querySelector("h2")
                 h2.textContent = data.title
             } else {
-                return router("/")
+                return router("/login")
             }    
         } catch (err){
             console.log(err)

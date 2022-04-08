@@ -40,11 +40,29 @@ export default class Rejister extends AbstractView {
                 /* TODO Show form validation error to the user */
                 return console.log("Form invalid")
             }
+            this.#registerApi(form, router)
         })
     }
 
     /* TO BE EXTRACTED IN A SEPARATE FILE FOR API REQUEST */
-    async #loginApi(form, router) {
-    
+    async #registerApi(form, router) {
+        const data =  {
+            "username": form.username.value,
+            "email" : form.email.value,
+            "password": form.password.value
+        }
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        if(response.ok) {
+            router("/")
+        } else {
+            /* TODO Show form validation error from the server to the user */
+            return console.log("invalid data")
+        }        
     }
 }

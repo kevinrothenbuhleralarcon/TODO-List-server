@@ -5,9 +5,9 @@ import Register from "./views/auth/register.js"
 import Todo from "./views/todo/todo.js"
 
 const routes = [  
-    { path: '/', view: Login },
+    { path: '/', view: Todo },
+    { path: '/login', view: Login },
     { path: '/register', view: Register },
-    { path: '/todo', view: Todo }
 ]
 
 const pageContent = document.querySelector("#page-content")
