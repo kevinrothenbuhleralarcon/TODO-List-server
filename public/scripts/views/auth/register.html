@@ -5,11 +5,12 @@
     <h2>Account creation</h2>
     <form id="register">
         <div class="form-content">
-            <input class="top" type="text" name="username" id="username" placeholder="Username">
-            <input type="email" name="email" id="email" placeholder="Email">
-            <input type="password" name="password" id="password" placeholder="Password">
-            <input class="bottom" type="password" name="password2" id="password2" placeholder="Retype password">
+            <input class="top" type="text" name="username" id="username" placeholder="Username" required>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="password" name="password" id="password" placeholder="Password" required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$">
+            <input class="bottom" type="password" name="password2" id="password2" placeholder="Retype password" required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$">
             <button type="submit" id="submit">Submit</button>
         </div>        
     </form>
+    <a href="/login">Back to login</a>
 </div>

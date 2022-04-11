@@ -48,36 +48,89 @@ export default class Register extends AbstractView {
 
         this.#button.addEventListener("click", async(e) => {
             e.preventDefault()
-            if (this.#errorDiv) {
-                this.#errorDiv.parentElement.removeChild(this.#errorDiv)
-                this.#errorDiv = null
+
+            this.#cleanErrorMessage()            
+
+            // Validate the form and display the errors if any
+            const errors = this.#validateForm()
+            if(errors.length > 0) {
+                return this.#displayError(errors)
             }
-            if ((this.#form.username.value === "") || (this.#form.email.value === "") || (this.#form.password.value === "") || (this.#form.password2.value === "") || (this.#form.password.value !== this.#form.password2.value)) {
-                return this.#displayError("All fields are required")                
-            }
+
+            // Make the api call for user creation
             const response = await this.#todoApi.register({
                 username: this.#form.username.value,
                 email: this.#form.email.value,
                 password: this.#form.password.value
             })
+
+            // If connected redirect to the main page, otherwise display the server error message
             if(response.connected) {
                 router("/")
             } else {
-                return this.#displayError(response.value)
+                return this.#displayError([response.value])
             }
         })
     }
 
     /**
-     * Display an error on the form
-     * @param {String} error 
+     * Remove the error div if any
      */
-     #displayError(error) {
+    #cleanErrorMessage() {
+        if (this.#errorDiv) {
+            this.#errorDiv.parentElement.removeChild(this.#errorDiv)
+            this.#errorDiv = null
+        }
+    }
+
+    /**
+     * Validate the form and return an array of errors
+     * @returns {String[]} errors
+     */
+    #validateForm() {
+        /** @type {HTMLInputElement} */
+        const username = this.#form.username
+        /** @type {HTMLInputElement} */
+        const email = this.#form.email
+        /** @type {HTMLInputElement} */
+        const password1 = this.#form.password
+        /** @type {HTMLInputElement} */
+        const password2 = this.#form.password2
+        /** @type {String[]} */
+        const errors = []
+        if (username.validity.valueMissing) {
+            errors.push("Username cannot be empty")
+        }
+        if (email.validity.valueMissing) {
+            errors.push("Email cannot be empty")
+        }
+        if (email.validity.typeMismatch) {
+            errors.push("Email is not in valid format")
+        }
+        if(password1.validity.valueMissing || password2.validity.valueMissing) {
+            errors.push("Passwords cannot be empty")
+        }
+        if(password1.validity.patternMismatch || password2.validity.patternMismatch) {
+            errors.push("Password type mismatch")
+        }
+        if(password1.value !== password2.value) {
+            errors.push("Passwords doesn't match")
+        }
+        return errors
+    }
+
+    /**
+     * Display an error on the form
+     * @param {Array.<String>} errors 
+     */
+     #displayError(errors) {
         /** @type {HTMLDivElement} */
         const formContent = document.querySelector(".form-content")
         this.#errorDiv = document.createElement("div")
         this.#errorDiv.classList.add("error")
-        this.#errorDiv.innerText = error
+        errors.forEach(error => {
+            this.#errorDiv.innerHTML += error + "<br>"
+        })        
         formContent.insertBefore(this.#errorDiv, formContent.firstChild)
     }
 }
