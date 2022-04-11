@@ -1,7 +1,7 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
 const connection = require("../config/database")
-const User = require("../model/User")
+const User = require("../model/user")
 
 const convertUser = function(dbUser) {
     return new User(
