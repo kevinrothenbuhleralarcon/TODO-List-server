@@ -6,15 +6,12 @@ export default class TodoApi {
 
     /**
      * API call for login
-     * @param {!String} username
-     * @param {!String} password
+     * @param {Object} data
+     * @param {String} data.username 
+     * @param {String} data.password 
      * @returns {Promise<{connected: boolean, value: object}>} boolean - true if connected; value - Json object of the response
      */
-    async login(username, password) {
-        const data =  {
-            username: username,
-            password: password
-        }
+    async login(data) {
         const response = await fetch("/api/login", {
             method: "POST",
             headers: {

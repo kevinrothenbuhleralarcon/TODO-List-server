@@ -1,14 +1,29 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
+import TodoApi from "../../todoApi.js"
 import AbstractView from "../abstractView.js"
 
 export default class Login extends AbstractView {
+    
+    /** @type {?HTMLButtonElement} */
+    #button
+    /** @type {?HTMLFormElement} */
+    #form
+    /** @type {?HTMLDivElement} */
+    #errorDiv
+    /** @type {!TodoApi} */
+    #todoApi
 
     /**
      * Constructor
+     * @param {TodoApi} todoApi
      */
-    constructor() {
+    constructor(todoApi) {
         super("Login")
+        this.#button = null
+        this.#form = null
+        this.#errorDiv = null
+        this.#todoApi = todoApi
     }
 
     /**
@@ -27,37 +42,42 @@ export default class Login extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
-        const button = document.querySelector("#submit")
-        const form = document.querySelector("#login")
-        if(!(button && form)) return
-        button.addEventListener("click", (e) => {
+        this.#button = document.querySelector("#submit")
+        this.#form = document.querySelector("#login")
+        if(!(this.#button && this.#form)) return
+        this.#button.addEventListener("click", async (e) => {
             e.preventDefault()
-            if ((form.username.value === "") || (form.password.value === "")) {
-                /* TODO Show form validation error to the user */
-                return console.log("Form invalid")
+            if (this.#errorDiv) {
+                this.#errorDiv.parentElement.removeChild(this.#errorDiv)
+                this.#errorDiv = null
             }
-            this.#loginApi(form, router)
+            if ((this.#form.username.value === "") || (this.#form.password.value === "")) {
+                this.#displayError("All fields are required")
+                return
+            }
+            const response = await this.#todoApi.login({
+                    username: this.#form.username.value,
+                    password: this.#form.password.value
+                })
+            if(response.connected) {
+                router("/")
+            } else {
+                this.#displayError(response.value)
+                return
+            }
         })
-    }    
-
-    /* TO BE EXTRACTED IN A SEPARATE FILE FOR API REQUEST */
-    async #loginApi(form, router) {
-        const data =  {
-            "username": form.username.value,
-            "password": form.password.value
-        }
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        if(response.ok) {
-            router("/")
-        } else {
-            /* TODO Show form validation error from the server to the user */
-            return console.log("invalid data")
-        }        
+    }
+    
+    /**
+     * Display an error on the form
+     * @param {String} error 
+     */
+    #displayError(error) {
+        /** @type {HTMLDivElement} */
+        const formContent = document.querySelector(".form-content")
+        this.#errorDiv = document.createElement("div")
+        this.#errorDiv.classList.add("error")
+        this.#errorDiv.innerText = error
+        formContent.insertBefore(this.#errorDiv, formContent.firstChild)
     }
 }

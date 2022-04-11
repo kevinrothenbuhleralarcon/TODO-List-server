@@ -7,7 +7,6 @@
  * @param {string} path
  */
 export default class AbstractView {
-
      /**
      * Construct, get the title of the document in paramater
      * @param {String} title 
@@ -23,8 +22,6 @@ export default class AbstractView {
     async getHtml() {
         return ""
     }
-
-
 
     /**
      * The script for the view, takes the callback for navigation

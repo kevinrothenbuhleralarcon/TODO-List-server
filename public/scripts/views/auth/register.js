@@ -1,19 +1,34 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
+import TodoApi from "../../todoApi.js"
 import AbstractView from "../abstractView.js"
 
-export default class Rejister extends AbstractView {
+export default class Register extends AbstractView {
+
+    /** @type {?HTMLButtonElement} */
+    #button
+    /** @type {?HTMLFormElement} */
+    #form
+    /** @type {?HTMLDivElement} */
+    #errorDiv
+    /** @type {!TodoApi} */
+    #todoApi
 
     /**
-     * Construct
+     * Constructor
+     * @param {TodoApi} todoApi
      */
-     constructor() {
+    constructor(todoApi) {
         super("Register")
+        this.#button = null
+        this.#form = null
+        this.#errorDiv = null
+        this.#todoApi = todoApi
     }    
 
     /**
-     * Return the html content of the page
-     * @returns {Promise<String>} html content
+     * Return the html content of the page as string
+     * @returns {Promise<String>}
      */
     async getHtml() {
         const response = await fetch("./static/scripts/views/auth/register.html")
@@ -21,48 +36,48 @@ export default class Rejister extends AbstractView {
         return htmlContent  
     }
 
-
-
-    /**
+     /**
      * The script of the view, the router is there for navigation
      * @param {import("../abstractView.js").navigateCallback} router 
      * @returns 
      */
     async executeViewScript(router) {
-        const submitButton = document.querySelector("#submit")
-        const form = document.querySelector("#register")
-        if(!(submitButton && form)) return
+        this.#button = document.querySelector("#submit")
+        this.#form = document.querySelector("#register")
+        if(!(this.#button && this.#form)) return
 
-        submitButton.addEventListener("click", (e) => {
+        this.#button.addEventListener("click", async(e) => {
             e.preventDefault()
-
-            if ((form.username.value === "") || (form.email.value === "") || (form.password.value === "") || (form.password2.value === "") || (form.password.value !== form.password2.value)) {
-                /* TODO Show form validation error to the user */
-                return console.log("Form invalid")
+            if (this.#errorDiv) {
+                this.#errorDiv.parentElement.removeChild(this.#errorDiv)
+                this.#errorDiv = null
             }
-            this.#registerApi(form, router)
+            if ((this.#form.username.value === "") || (this.#form.email.value === "") || (this.#form.password.value === "") || (this.#form.password2.value === "") || (this.#form.password.value !== this.#form.password2.value)) {
+                return this.#displayError("All fields are required")                
+            }
+            const response = await this.#todoApi.register({
+                username: this.#form.username.value,
+                email: this.#form.email.value,
+                password: this.#form.password.value
+            })
+            if(response.connected) {
+                router("/")
+            } else {
+                return this.#displayError(response.value)
+            }
         })
     }
 
-    /* TO BE EXTRACTED IN A SEPARATE FILE FOR API REQUEST */
-    async #registerApi(form, router) {
-        const data =  {
-            "username": form.username.value,
-            "email" : form.email.value,
-            "password": form.password.value
-        }
-        const response = await fetch("/api/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        if(response.ok) {
-            router("/")
-        } else {
-            /* TODO Show form validation error from the server to the user */
-            return console.log("invalid data")
-        }        
+    /**
+     * Display an error on the form
+     * @param {String} error 
+     */
+     #displayError(error) {
+        /** @type {HTMLDivElement} */
+        const formContent = document.querySelector(".form-content")
+        this.#errorDiv = document.createElement("div")
+        this.#errorDiv.classList.add("error")
+        this.#errorDiv.innerText = error
+        formContent.insertBefore(this.#errorDiv, formContent.firstChild)
     }
 }
