@@ -48,7 +48,6 @@ export default class Register extends AbstractView {
 
         this.#button.addEventListener("click", async(e) => {
             e.preventDefault()
-
             this.#cleanErrorMessage()            
 
             // Validate the form and display the errors if any

@@ -4,7 +4,7 @@ import TodoApi from "../../todoApi.js"
 import AbstractView from "../abstractView.js"
 
 export default class Login extends AbstractView {
-    
+
     /** @type {?HTMLButtonElement} */
     #button
     /** @type {?HTMLFormElement} */
@@ -47,14 +47,14 @@ export default class Login extends AbstractView {
         if(!(this.#button && this.#form)) return
         this.#button.addEventListener("click", async (e) => {
             e.preventDefault()
-            if (this.#errorDiv) {
-                this.#errorDiv.parentElement.removeChild(this.#errorDiv)
-                this.#errorDiv = null
+            this.#cleanErrorMessage()
+            
+            // Validate the form and display the errors if any
+            const errors = this.#validateForm()
+            if(errors.length > 0) {
+                return this.#displayError(errors)
             }
-            if ((this.#form.username.value === "") || (this.#form.password.value === "")) {
-                this.#displayError("All fields are required")
-                return
-            }
+
             const response = await this.#todoApi.login({
                     username: this.#form.username.value,
                     password: this.#form.password.value
@@ -62,22 +62,54 @@ export default class Login extends AbstractView {
             if(response.connected) {
                 router("/")
             } else {
-                this.#displayError(response.value)
+                this.#displayError([response.value])
                 return
             }
         })
     }
+
+    /**
+     * Remove the error div if any
+     */
+     #cleanErrorMessage() {
+        if (this.#errorDiv) {
+            this.#errorDiv.parentElement.removeChild(this.#errorDiv)
+            this.#errorDiv = null
+        }
+    }
+
+    /**
+     * Validate the form and return an array of errors
+     * @returns {String[]} errors
+     */
+     #validateForm() {
+        /** @type {HTMLInputElement} */
+        const username = this.#form.username
+        /** @type {HTMLInputElement} */
+        const password = this.#form.password
+        /** @type {String[]} */
+        const errors = []
+        if (username.validity.valueMissing) {
+            errors.push("Username cannot be empty")
+        }
+        if(password.validity.valueMissing) {
+            errors.push("Password cannot be empty")
+        }
+        return errors
+    }
     
     /**
      * Display an error on the form
-     * @param {String} error 
+     * @param {Array.<String>} errors 
      */
-    #displayError(error) {
+    #displayError(errors) {
         /** @type {HTMLDivElement} */
         const formContent = document.querySelector(".form-content")
         this.#errorDiv = document.createElement("div")
         this.#errorDiv.classList.add("error")
-        this.#errorDiv.innerText = error
+        errors.forEach(error => {
+            this.#errorDiv.innerHTML += error + "<br>"
+        })        
         formContent.insertBefore(this.#errorDiv, formContent.firstChild)
     }
 }
