@@ -91,6 +91,7 @@ header {
 .error {
     color: red;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .main-footer {
