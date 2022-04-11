@@ -21,9 +21,9 @@ header {
 }
 
 #page-content {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 20px 10px;
     text-align: center;
+    min-width: 350px;
 }
 
 .card {
@@ -94,11 +94,28 @@ header {
     margin-bottom: 10px;
 }
 
+div.info {
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 10px;
+}
+
+div.info ul {
+    margin: 0;
+    margin-top: 5px;
+    padding: 0;
+    list-style-type: none;
+}
+
+div.info li::before {
+    content: "- ";
+}
+
 .main-footer {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #ccc;
+    min-width: 350px;
     width: 100vw;
     height: 60px;
 }
