@@ -1,4 +1,12 @@
 /* Author: Kevin Rothenbühler-Alarcon */
+
+:root {
+    --cardBackgroundColor: #f7f7f7;
+    --cardTextInfoColor: rgba(0, 0, 0, 0.6);
+    --headerBackgroundColor: rgb(209, 60, 60);
+    --footerBackgroundColor: #ccc;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -17,7 +25,7 @@ header {
     display: flex;
     width: 100vw;
     height: 60px;
-    background-color: rgb(209, 60, 60);
+    background-color: var(--headerBackgroundColor);
 }
 
 #page-content {
@@ -30,7 +38,7 @@ header {
     border: solid 1px #ccc;
     border-radius: 10px;
     padding: 20px;
-    background-color: #f7f7f7;
+    background-color: var(--cardBackgroundColor);
 }
 
 .card h2 {
@@ -52,7 +60,7 @@ header {
 
 .form-content input {
     width: 100%;
-    border: 1px solid #ccc;
+    border: 1px solid var(--footerBackgroundColor);
     height: auto;
     font-size: 16px;
     padding: 10px;
@@ -81,7 +89,7 @@ header {
     width: 100%;
     font-size: 18px;
     color: #fff;
-    background-color: rgb(209, 60, 60);
+    background-color: var(--headerBackgroundColor);
     border: 1px solid transparent;
     border-color: rgb(88, 18, 18);
     border-radius: 6px;
@@ -95,7 +103,7 @@ header {
 }
 
 div.info {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--cardTextInfoColor);
     margin-top: 10px;
 }
 
@@ -111,26 +119,25 @@ div.info li::before {
 }
 
 .main-footer {
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ccc;
+    background-color: var(--footerBackgroundColor);
+    margin-top: auto;
     min-width: 350px;
     width: 100vw;
     height: 60px;
-    top: auto;
-    bottom: 0;
 }
 
 #todo-list-content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex-wrap: wrap;
 }
 
 .todo-thumbnail {
-    width: 100%;
+    width: 280px;
     margin: 10px 0;
     cursor: pointer;
     transition: scale 0.3s;
@@ -140,6 +147,16 @@ div.info li::before {
     scale: 1.05;
 }
 
+.thumbnail-title {
+    margin: 0;
+}
+
+.thumbnail-content {
+    margin-top: 20px;
+    text-align: left;
+    color: var(--cardTextInfoColor);
+}
+
 @media only screen and (min-width: 800px) {
     #todo-list-content {
         flex-direction: row;
@@ -147,7 +164,6 @@ div.info li::before {
     }
 
     .todo-thumbnail {
-        width: 350px;
         margin: 10px;
     }
 }
