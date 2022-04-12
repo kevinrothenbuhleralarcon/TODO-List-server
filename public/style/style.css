@@ -7,7 +7,7 @@ body {
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     min-width: 100vw;
     min-height: 100vh;
     font-family: sans-serif;
@@ -111,6 +111,7 @@ div.info li::before {
 }
 
 .main-footer {
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -118,4 +119,35 @@ div.info li::before {
     min-width: 350px;
     width: 100vw;
     height: 60px;
+    top: auto;
+    bottom: 0;
+}
+
+#todo-list-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.todo-thumbnail {
+    width: 100%;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: scale 0.3s;
+}
+
+.todo-thumbnail:hover {
+    scale: 1.05;
+}
+
+@media only screen and (min-width: 800px) {
+    #todo-list-content {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .todo-thumbnail {
+        width: 350px;
+        margin: 10px;
+    }
 }
