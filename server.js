@@ -5,7 +5,7 @@ const express = require("express")
 const app = express()
 const cookieParser = require("cookie-parser")
 const usersManagement = require("./routes/users")
-const todoManagement = require("./routes/todo")
+const todoManagement = require("./routes/todos")
 const auth = require("./middleware/auth")
 
 // Middleware

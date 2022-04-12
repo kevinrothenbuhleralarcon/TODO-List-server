@@ -1,5 +1,7 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
+const { Dayjs } = require("dayjs")
+
 /** Class representing a Todo */
 class Todo {
 
@@ -7,8 +9,8 @@ class Todo {
      * Constructor
      * @param {number} id 
      * @param {String} title 
-     * @param {Date} createdAt 
-     * @param {Date} lastUpdatedAt 
+     * @param {Dayjs} createdAt 
+     * @param {Dayjs} lastUpdatedAt 
      * @param {number} userId 
      * @param {Task[]} tasks 
      */

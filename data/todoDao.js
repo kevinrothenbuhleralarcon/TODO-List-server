@@ -3,6 +3,7 @@
 const connection = require("../config/database")
 const Todo = require("../model/todo")
 const Task = require("../model/task")
+const dayJs = require("../config/dayjs")
 
 
 /**
@@ -18,7 +19,7 @@ exports.getTodosByUserId = async function(userId) {
             )
         if(dbTodos) {
             /** @type {Todo[]} */
-            const todos = dbTodos.map(row => new Todo(row.id, row.title, row.created_at, row.last_updated_at, row.user_id, null) )
+            const todos = dbTodos.map(row => new Todo(row.id, row.title, dayJs(row.created_at).format("DD.MM.YYYY hh:mm:ss"), dayJs(row.last_updated_at).fromNow(), row.user_id, null) )
 
             await Promise.all(todos.map(async todo => {
                 const [dbTasks, _] = await connection.promise().execute(
