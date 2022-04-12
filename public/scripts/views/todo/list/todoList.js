@@ -11,6 +11,8 @@ export default class Todolist extends AbstractView {
     #todoCardTemplate
     /** @type {!TodoApi} */
     #todoApi
+    /** @type {?import("../abstractView.js").navigateCallback} */
+    #router
 
      /**
      * Constructor
@@ -21,6 +23,7 @@ export default class Todolist extends AbstractView {
         this.#todoApi = todoApi
         this.#todoListPageContent = null
         this.#todoCardTemplate = null
+        this.#router = null
     }
 
     /**
@@ -39,6 +42,7 @@ export default class Todolist extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
+        this.#router = router
         this.#todoListPageContent = document.querySelector("#todo-list-content")
         try {
             const todos = await this.#todoApi.getTodoList()
@@ -49,7 +53,7 @@ export default class Todolist extends AbstractView {
             }
         } catch (err){
             console.log(err)
-            router("/login")
+            this.#router("/login")
         }       
         
     }    
@@ -77,11 +81,11 @@ export default class Todolist extends AbstractView {
         todoCard.querySelector(".thumbnail-title").innerText = todo.title
         todoCard.querySelector(".created-at").innerText += todo.createdAt
         todoCard.querySelector(".last-updated-at").innerText += todo.lastUpdatedAt
-        todoCard.addEventListener("click", this.#cardClick)
+        todoCard.addEventListener("click", this.#cardClick.bind(this))
         this.#todoListPageContent.appendChild(todoCard)
     }
 
     #cardClick(e) {
-        console.log("coucou")
+        this.#router("/update")
     }
 }
