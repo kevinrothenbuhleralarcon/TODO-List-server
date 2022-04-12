@@ -4,6 +4,37 @@ const connection = require("../config/database")
 const Todo = require("../model/todo")
 const Task = require("../model/task")
 
+
+/**
+ * Return the list of Todo for a specific user
+ * @param {number} userId 
+ * @returns {Promise<?Todo[]>}
+ */
+exports.getTodosByUserId = async function(userId) {
+    try {
+        const [dbTodos, _] = await connection.promise().execute(
+                "SELECT * FROM tbl_todos WHERE user_id = ?", 
+                [userId]
+            )
+        if(dbTodos) {
+            /** @type {Todo[]} */
+            const todos = dbTodos.map(row => new Todo(row.id, row.title, row.created_at, row.last_updated_at, row.user_id, null) )
+
+            await Promise.all(todos.map(async todo => {
+                const [dbTasks, _] = await connection.promise().execute(
+                    "SELECT * FROM tbl_tasks WHERE todo_id = ?",
+                    [todo.id]
+                )
+                todo.tasks = dbTasks.map(dbTask => new Task(dbTask.id, dbTask.description, dbTask.status, dbTask.deadline, dbTask.todo_id))
+            }))
+            return todos
+        }
+        return null
+    } catch (err) {
+        return null
+    }
+}
+
 // UPDATE
 
 /**
@@ -11,38 +42,38 @@ const Task = require("../model/task")
  * @param {Todo} todo 
  * @returns {Promise<results>} Promise object representing the id of the updated user
  */
- exports.updateTodo = function(todo) {
-     const results =[]
-     return new Promise((resolve, reject) => {
-        connection.execute(
-            "UPDATE tbl_todos SET id = ? , title = ?, created_at = ?, last_updated_at = ?, user_id = ? WHERE id = ?",
-            [todo.id, todo.title, todo.createdAt, todo.lastUpdatedAt, todo.userId, todo.id],
-            (err, result) => {
-                if(err) reject(err)
-                results.push(result)
-            }
-        )
-        console.log(todo.tasks[0])
+ exports.updateTodo = async function(todo) {
+     
+    const results = []
+    const errors = []
+    console.log("Start update todo")
+    const test = await connection.execute(
+        "UPDATE tbl_todos SET id = ? , title = ?, created_at = ?, last_updated_at = ?, user_id = ? WHERE id = ?",
+        [todo.id, todo.title, todo.createdAt, todo.lastUpdatedAt, todo.userId, todo.id]
+        /*(err, result) => {
+            if(err) reject(err)
+            results.push(result)
+            console.log("End update todo")
+            //resolve(result)
+        }*/
+    )
+    console.log(test)
+    /*console.log("Start update tasks")
+    todo.tasks.forEach(task => {
+        console.log(`Start update task: ${task.id}`)
         connection.execute(
             "INSERT INTO tbl_tasks (id, description, status, deadline, todo_id) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES(id), description = VALUES(description), status = VALUES(status), deadline = VALUES(deadline), todo_id = VALUES(todo_id)",
-            [todo.tasks[0].id, todo.tasks[0].description, todo.tasks[0].status, todo.tasks[0].deadline, todo.tasks[0].todo_id],
+            [task.id, task.description, task.status, task.deadline, task.todoId],
             (err, result) => {
                 if(err) reject(err)
+                //console.log(result)
                 results.push(result)
+                console.log(`End update task: ${task.id}`)
             }
         )
-        
-        /*todo.tasks.forEach(task => {
-            connection.execute(
-                "INSERT INTO tbl_tasks (id, description, status, deadline, todo_id) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES(id), description = VALUES(description), status = VALUES(status), deadline = VALUES(deadline), todo_id = VALUES(todo_id)",
-                [task.id, task.description, task.status, task.deadline, task.todo_id],
-                (err, result) => {
-                    if(err) reject(err)
-                    results.push(result)
-                }
-            )
-        })*/
-
+    })*/
+    return new Promise((resolve, reject) => {
+        console.log("resolve")
         resolve(results)
-     })
+    })
 }

@@ -9,25 +9,30 @@ const Todo = require("../model/todo")
  * @param {Request} req 
  * @param {Response} res 
  */
-exports.getTodoList = function (req, res) {
-    const tasks = [
+exports.getTodoList = async function (req, res) {
+    const userId = req.userId
+    const todos = await todoDao.getTodosByUserId(userId)
+    res.status(200).json({todos: todos})
+}
+
+
+//NOT CURRENTLY USED; FOR TEST PURPOSE ONLY
+exports.upDateTodo = async function (req, res){
+    /*const tasks = [
         new Task(1, "Create a first test todo", false, null, 1),
-        new Task(2, "Create a first task", false, null, 1),
+        new Task(2, "Create a first task for the first todo", false, null, 1),
         new Task(3, "Create a second task", false, null, 1),
         new Task(null, "Create a third task", false, null, 1),
     ]
     const test = new Todo(
         1,
         "first test todo",
-        Date.now(),
-        Date.now(),
+        new Date(),
+        new Date(),
         10,
         tasks
     )
-
-    //console.log(test)
-    todoDao.updateTodo(test)
-
-    const userId = req.userId
-    res.status(200).json({"title": `Todo list for user: ${userId}`})
+    
+    const results = await todoDao.updateTodo(test)
+    console.log(results.length)*/
 }
