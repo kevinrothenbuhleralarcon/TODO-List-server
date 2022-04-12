@@ -161,6 +161,7 @@ div.info li::before {
     #todo-list-content {
         flex-direction: row;
         justify-content: center;
+        align-items: flex-start;
     }
 
     .todo-thumbnail {
