@@ -17,7 +17,7 @@ exports.getTodosByUserId = async function(userId) {
                 "SELECT * FROM tbl_todos WHERE user_id = ?", 
                 [userId]
             )
-        if(dbTodos) {
+        if(dbTodos.length > 0) {
             /** @type {Todo[]} */
             const todos = dbTodos.map(row => new Todo(row.id, row.title, dayJs(row.created_at).format("DD.MM.YYYY hh:mm:ss"), dayJs(row.last_updated_at).fromNow(), row.user_id, null) )
 
@@ -32,6 +32,34 @@ exports.getTodosByUserId = async function(userId) {
         }
         return null
     } catch (err) {
+        return null
+    }
+}
+
+/**
+ * Return a specific todo
+ * @param {number} todoId 
+ * @param {number} userId 
+ * @returns {Promise<?Todo>}
+ */
+exports.getTodoById = async function(todoId, userId) {
+    try {
+        const [dbTodo, _] = await connection.promise().execute(
+            "SELECT * FROM tbl_todos WHERE id = ? AND user_id = ? LIMIT 1",
+            [todoId, userId]
+        )
+        if(dbTodo.length > 0) {
+            const todo = new Todo(dbTodo[0].id, dbTodo[0].title, dayJs(dbTodo[0].created_at).format("DD.MM.YYYY hh:mm:ss"), dayJs(dbTodo[0].last_updated_at).format("DD.MM.YYYY hh:mm:ss"), dbTodo[0].user_id, null)
+            const [dbTasks, _] = await connection.promise().execute(
+                "SELECT * FROM tbl_tasks WHERE todo_id = ?",
+                [todo.id]
+            )
+            todo.tasks = dbTasks.map(dbTask => new Task(dbTask.id, dbTask.description, dbTask.status, dbTask.deadline, dbTask.todo_id))
+            return todo
+        }
+        return null
+    } catch (err) {
+        console.log(err)
         return null
     }
 }

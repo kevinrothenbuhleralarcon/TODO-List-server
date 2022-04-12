@@ -15,10 +15,12 @@ app.use("/static", express.static("public"))
 
 // API
 app.get("/api/todoList", auth, todoManagement.getTodoList)
+app.get("/api/todo", auth, todoManagement.getTodo)
 
 app.post("/api/register", usersManagement.registerUser)
 app.post("/api/login", usersManagement.loginUser)
 app.post("/api/deleteUser", usersManagement.deleteUser)
+
 
 // Web client entry point
 app.get("/*", (req, res) => {

@@ -15,6 +15,17 @@ exports.getTodoList = async function (req, res) {
     res.status(200).json({todos: todos})
 }
 
+/**
+ * Return the list of todos for a specific user
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+exports.getTodo = async function (req, res) {
+    const userId = req.userId
+    const todo = await todoDao.getTodoById(req.query.id, userId)
+    res.status(200).json({todo: todo})
+}
+
 
 //NOT CURRENTLY USED; FOR TEST PURPOSE ONLY
 exports.upDateTodo = async function (req, res){
