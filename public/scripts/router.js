@@ -5,11 +5,11 @@ import TodoApi from "./todoApi.js"
 import AbstractView from "./views/abstractView.js"
 import Login from "./views/auth/login.js"
 import Register from "./views/auth/register.js"
-import Todo from "./views/todo/todo.js"
+import TodoList from "./views/todo/todoList.js"
 
 /** @type {Array.<{path: string, view: AbstractView>}>} */
 const routes = [  
-    { path: '/', view: Todo },
+    { path: '/', view: TodoList },
     { path: '/login', view: Login },
     { path: '/register', view: Register },
 ]

@@ -64,4 +64,15 @@ export default class TodoApi {
             }
         }        
     }
+
+    async getTodoList() {
+        const response = await fetch("/api/todoList") 
+        if (response.ok) {
+            const data = await response.json()
+            return data.todos
+        } else {
+            const data = await response.text()
+            throw (data)
+        }
+    }
 }
