@@ -1,5 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
+import Todo from "../model/todo.js"
+
 export default class TodoApi {
 
     constructor() {}
@@ -75,14 +77,14 @@ export default class TodoApi {
 
     /**
      * API call for getting the list of todo for the connected user
-     * @returns {Promise<Object>} Json object of the response (an array of Todo) or the error message from the API
+     * @returns {Promise<Todo[]>} Json object of the response (an array of Todo) or the error message from the API
      */
     async getTodoList() {
         try {
             const response = await fetch("/api/todoList") 
             if (response.ok) {
                 const data = await response.json()
-                return data.todos
+                return data.todos.map(todo => Todo.fromApi(todo))
             } else {
                 const data = await response.text()
                 throw (data)
@@ -95,14 +97,15 @@ export default class TodoApi {
 
     /**
      * API call for getting a specific todo belonging to the connected user
-     * @param {*} id 
+     * @param {number} id 
+     * @returns {Promise<?Todo>}
      */
     async getTodo(id) {
         try {
             const response = await fetch(`/api/todo?id=${id}`)
             if(response.ok) {
                 const data = await response.json()
-                return data.todo
+                return Todo.fromApi(data.todo)
             } else {
                 const data = await response.text()
                 throw(data)
