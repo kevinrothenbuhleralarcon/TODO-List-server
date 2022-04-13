@@ -24,6 +24,7 @@ export default class TodoApi {
             })
             if(response.ok) {
                 const value = await response.json()
+                window.sessionStorage.setItem("username", value.username)
                 return {
                     connected: true,
                     value: value
@@ -59,6 +60,7 @@ export default class TodoApi {
             })
             if(response.ok) {
                 const value = await response.json()
+                window.sessionStorage.setItem("username", value.username)
                 return {
                     connected: true,
                     value: value
