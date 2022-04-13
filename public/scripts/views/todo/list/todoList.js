@@ -46,6 +46,8 @@ export default class Todolist extends AbstractView {
         this.#router = router
         this.#todoListPageContent = document.querySelector("#todo-list-content")
         const username = window.sessionStorage.getItem("username")
+        document.querySelector("#connected-user").innerHTML = username
+        document.querySelector(".test").innerHTML = username
         try {
             const todos = await this.#todoApi.getTodoList()
             if (todos) {
