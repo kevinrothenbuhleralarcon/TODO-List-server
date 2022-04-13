@@ -82,6 +82,24 @@ exports.getUserByEmail = function(email) {
     })
 }
 
+/**
+ * Return the stored token of a user
+ * @param {number} userId 
+ * @returns {Promise<?String>} The stored token or null
+ */
+exports.getUserToken = async function (userId) {
+    try {
+        const [dbToken, _] = await connection.promise().execute(
+            "SELECT token FROM tbl_users WHERE id = ?",
+            [userId]
+        )
+        return dbToken[0].token
+    } catch (err) {
+        console.log(err)
+        return null
+    }    
+}
+
 
 // INSERT
 
