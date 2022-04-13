@@ -2,7 +2,7 @@
 
 const dayJs = require("../config/dayjs")
 
-/** Class representing a Todo */
+/** Class representing a Task */
 class Task {
 
     /**

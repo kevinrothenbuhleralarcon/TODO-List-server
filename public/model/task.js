@@ -1,6 +1,6 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
-/** Class representing a Todo */
+/** Class representing a Task */
 export default class Task {
 
     /**
