@@ -19,19 +19,19 @@ exports.getTodosByUserId = async function(userId) {
             )
         if(dbTodos.length > 0) {
             /** @type {Todo[]} */
-            const todos = dbTodos.map(row => new Todo(row.id, row.title, dayJs(row.created_at).format("DD.MM.YYYY hh:mm:ss"), dayJs(row.last_updated_at).fromNow(), row.user_id, null) )
-
+            const todos = dbTodos.map(row => Todo.fromRowFromNow(row) )
             await Promise.all(todos.map(async todo => {
                 const [dbTasks, _] = await connection.promise().execute(
                     "SELECT * FROM tbl_tasks WHERE todo_id = ?",
                     [todo.id]
                 )
-                todo.tasks = dbTasks.map(dbTask => new Task(dbTask.id, dbTask.description, dbTask.status, dbTask.deadline, dbTask.todo_id))
+                todo.tasks = dbTasks.map(dbTask => Task.fromRow(dbTask))
             }))
             return todos
         }
         return null
     } catch (err) {
+        console.log(err)
         return null
     }
 }
@@ -49,12 +49,12 @@ exports.getTodoById = async function(todoId, userId) {
             [todoId, userId]
         )
         if(dbTodo.length > 0) {
-            const todo = new Todo(dbTodo[0].id, dbTodo[0].title, dayJs(dbTodo[0].created_at).format("DD.MM.YYYY hh:mm:ss"), dayJs(dbTodo[0].last_updated_at).format("DD.MM.YYYY hh:mm:ss"), dbTodo[0].user_id, null)
+            const todo = Todo.fromRow(dbTodo[0])
             const [dbTasks, _] = await connection.promise().execute(
                 "SELECT * FROM tbl_tasks WHERE todo_id = ?",
                 [todo.id]
             )
-            todo.tasks = dbTasks.map(dbTask => new Task(dbTask.id, dbTask.description, dbTask.status, dbTask.deadline, dbTask.todo_id))
+            todo.tasks = dbTasks.map(dbTask => Task.fromRow(dbTask))
             return todo
         }
         return null

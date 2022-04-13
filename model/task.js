@@ -1,5 +1,7 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
+const dayJs = require("../config/dayjs")
+
 /** Class representing a Todo */
 class Task {
 
@@ -8,7 +10,7 @@ class Task {
      * @param {number} id 
      * @param {String} description 
      * @param {boolean} status 
-     * @param {?Date} deadline 
+     * @param {?String} deadline 
      * @param {number} todoId 
      */
     constructor(
@@ -23,6 +25,16 @@ class Task {
         this.status = status,
         this.deadline = deadline,
         this.todoId = todoId
+    }
+
+    static fromRow(row){
+        return new Task(
+            row.id,
+            row.description,
+            row.status,
+            dayJs(row.deadline).format("DD.MM.YYYY hh:mm:ss"),
+            row.todoId
+        )
     }
 }
 
