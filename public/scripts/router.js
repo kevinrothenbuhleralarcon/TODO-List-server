@@ -26,7 +26,7 @@ const pageContent = document.querySelector("#page-content")
  * @param {string} path
  */
 const loadPageContent = async function (path) {
-    let route = routes.find(route => route.path == path)
+    const route = routes.find(route => route.path == path)
     if (route) {
         /** @type {AbstractView} */
         const view = new route.view(todoApi)
@@ -43,13 +43,11 @@ const loadPageContent = async function (path) {
  */
 function router (path) {
     window.history.pushState({}, "newUrl", window.location.origin + path) // Add the url to the navigation history
-    loadPageContent(path)
+    loadPageContent(window.location.pathname)
 }
 
 // Handle the navigate back and forward
 window.addEventListener("popstate", () => loadPageContent(window.location.pathname))
 
 // Handle the page reload
-window.addEventListener("DOMContentLoaded", () => {
-    loadPageContent(window.location.pathname)
-})
+window.addEventListener("DOMContentLoaded", () => loadPageContent(window.location.pathname))
