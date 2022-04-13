@@ -19,7 +19,8 @@ app.get("/api/todo", auth, todoManagement.getTodo)
 
 app.post("/api/register", usersManagement.registerUser)
 app.post("/api/login", usersManagement.loginUser)
-app.post("/api/deleteUser", usersManagement.deleteUser)
+app.post("/api/deleteUser", auth, usersManagement.deleteUser)
+app.post("/api/disconnect", auth, usersManagement.disconnectUser)
 
 
 // Web client entry point

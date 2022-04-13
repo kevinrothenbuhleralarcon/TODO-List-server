@@ -92,6 +92,28 @@ exports.loginUser = async function(req, res) {
         console.log(e)
         res.status(500).send("Server error")
     }
+}
+
+/**
+ * Disconnect the user
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+exports.disconnectUser = async function(req, res) {
+    try {
+        const userId = req.userId
+        const user = await userDao.getUserById(userId)
+        if(user) {
+            user.token = null
+            userDao.updateUser(user)
+            res.clearCookie("x-access-token")
+            return res.status(200).send("Disconnected")
+        }
+        res.status(400).send("Invalid Credential")
+    } catch (err) {
+        console.log(err)
+        res.status(500).send("Server error")
+    }
     
 }
 
@@ -102,7 +124,7 @@ exports.loginUser = async function(req, res) {
  */
 exports.deleteUser = async function(req, res) {
     try {
-        const {id} = req.body
+        const userId = req.userId
         if (!id) {
             return res.status(400).send("Id not valid")
         }
@@ -113,6 +135,7 @@ exports.deleteUser = async function(req, res) {
             res.status(400).send("No users with this id")
         }    
     } catch (e) {
+        console.log(e)
         res.status(500).send("Server error")
     }
 }
