@@ -33,6 +33,16 @@ export default class TodoUpdate extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
-        
+        const queryString = window.location.search
+        const urlParams = new URLSearchParams(queryString)
+        const todoId = urlParams.get("id")
+        if (todoId === null) return router("/")
+        try {
+            const todo = await this.#todoApi.getTodo(todoId)
+            console.log(todo.title)
+        } catch(err) {
+            console.log(err)
+            router("/") 
+        }        
     }    
 }
