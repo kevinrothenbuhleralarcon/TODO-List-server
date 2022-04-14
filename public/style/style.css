@@ -58,6 +58,15 @@ header {
     font: inherit;
 }
 
+#connected-user::after {
+    content: "";
+    display: inline-block;
+    margin-left: 10px;
+    border-top: 10px white solid;
+    border-left: 5px transparent solid;
+    border-right: 5px transparent solid;
+}
+
 #connected-user:hover,
 #connected-user:focus  {
     background-color: #000000;
