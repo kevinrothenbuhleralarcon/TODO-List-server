@@ -25,47 +25,61 @@ header {
     display: flex;
     align-items: center;
     width: 100vw;
-    height: 60px;
+    /*height: 60px;*/
     background-color: var(--headerBackgroundColor);
+}
+
+.hidden {
+    display: none!important;
 }
 
 .dropdown {
     display: inline-block;
     position: relative;
     margin-left: auto;
-    margin-right: 20px;
+    margin-right: 0;
+    vertical-align: middle;
     text-align: right;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-.dropdown:hover .dropdown-content,
-.dropdown:active .dropdown-content {
+.dropdown:hover .dropdown-content {
     display: block;
 }
 
-
 #connected-user {
-    padding-left: 20px;
-    padding-right: 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color:#FFFFFF;
+    background-color: inherit;
+    padding: 14px 20px;
+    font: inherit;
 }
 
-
+#connected-user:hover,
+#connected-user:focus  {
+    background-color: #000000;
+}
 
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #fff;
     text-align: left;
-    right: 0;
-    overflow: auto;
-    border: 1px black solid;
-    border-radius: 5px;
+    right: 20px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.show {
+    display: block;
 }
 
 .dropdown-content a {
     display: block;
     color: #000000;
-    padding: 5px;
+    padding: 14px 20px;
     text-decoration: none;
 }
 
@@ -85,6 +99,7 @@ header {
     border-radius: 10px;
     padding: 20px;
     background-color: var(--cardBackgroundColor);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .card h2 {
@@ -190,7 +205,7 @@ div.info li::before {
 }
 
 .todo-thumbnail:hover {
-    scale: 1.05;
+    scale: 1.08;
 }
 
 .thumbnail-title {
