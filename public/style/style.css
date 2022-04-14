@@ -227,6 +227,20 @@ div.info li::before {
     color: var(--cardTextInfoColor);
 }
 
+.add-button {
+    position: fixed;
+    right: 5vw;
+    bottom: 5vh;
+    border: none;
+    outline: none;
+    height: 56px;
+    width: 56px;
+    border-radius: 50%;
+    background: var(--headerBackgroundColor) url(../res/icon/add_ic.svg) center center no-repeat;
+    z-index: 100;
+    box-shadow: 0px 0px 12px  rgba(0,0,0,0.8);
+}
+
 @media only screen and (min-width: 800px) {
     #todo-list-content {
         flex-direction: row;

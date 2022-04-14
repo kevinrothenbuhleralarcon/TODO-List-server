@@ -54,10 +54,18 @@ export default class Todolist extends AbstractView {
                     await this.#createThumbnailCard(todo)
                 }
             }
+            this.#createAddButton()
         } catch (err){
             this.#router("/login")
         }       
     }    
+
+    async #createAddButton() {
+        /** @type {HTMLButtonElement} */
+        const button = document.createElement("button")
+        button.classList.add("add-button")
+        this.#todoListPageContent.appendChild(button)
+    }
 
     /**
      * Load the thumbnail template
