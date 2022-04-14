@@ -4,7 +4,11 @@ import Todo from "../model/todo.js"
 
 export default class TodoApi {
 
-    constructor() {}
+    #connectionChanged
+
+    constructor(cb) {
+        this.#connectionChanged = cb
+    }
 
     /**
      * API call for login
@@ -24,13 +28,14 @@ export default class TodoApi {
             })
             if(response.ok) {
                 const value = await response.json()
-                window.sessionStorage.setItem("username", value.username)
+                this.#connectionChanged(value.username)
                 return {
                     connected: true,
                     value: value
                 }
             } else {
                 const value = await response.text()
+                this.#connectionChanged(null)
                 return {
                     connected: false,
                     value: value
@@ -60,13 +65,14 @@ export default class TodoApi {
             })
             if(response.ok) {
                 const value = await response.json()
-                window.sessionStorage.setItem("username", value.username)
+                this.#connectionChanged(value.username)
                 return {
                     connected: true,
                     value: value
                 }
             } else {
                 const value = await response.text()
+                this.#connectionChanged(null)
                 return {
                     connected: false,
                     value: value
@@ -75,6 +81,22 @@ export default class TodoApi {
         } catch (err) {
             throw (err)
         }        
+    }
+
+    async disconnect() {
+        try {
+            const response = await fetch ("/api/disconnect", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if(response.status !== 500) {
+                this.#connectionChanged(null)
+            }
+        } catch(err) {
+            throw (err)
+        }
     }
 
     /**
@@ -88,6 +110,9 @@ export default class TodoApi {
                 const data = await response.json()
                 return data.todos.map(todo => Todo.fromApi(todo))
             } else {
+                if(response.status == 401) {
+                    this.#connectionChanged(null)
+                }
                 const data = await response.text()
                 throw (data)
             }
@@ -109,6 +134,9 @@ export default class TodoApi {
                 const data = await response.json()
                 return Todo.fromApi(data.todo)
             } else {
+                if(response.status == 401) {
+                    this.#connectionChanged(null)
+                }
                 const data = await response.text()
                 throw(data)
             }

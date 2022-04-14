@@ -16,7 +16,37 @@ const routes = [
     { path: '/register', view: Register }
 ]
 
-const todoApi = new TodoApi()
+/** @type {HTMLDivElement} */
+const dropdownContent = document.querySelector(".dropdown-content")
+
+/**
+ * Display the username on the header along with the user options dropdown list
+ */
+const displayUser = function() {
+    const dropdown = document.querySelector(".dropdown")
+    const connectedUser = window.localStorage.getItem("username")
+    if (connectedUser !== null) {
+        dropdown.classList.remove("hidden")
+        dropdown.querySelector("#connected-user").innerHTML = connectedUser
+    } else {
+        dropdown.classList.add("hidden")
+    }
+}
+
+/**
+ * Callback for the API to signal that the user connection has changed
+ * @param {?String} username - the new username or null if the user is no longer connected
+ */
+const connectionChanged = function(username) {
+    if(username === null) {
+        window.localStorage.removeItem("username")
+    } else {
+        window.localStorage.setItem("username", username)
+    }
+    displayUser()
+}
+
+const todoApi = new TodoApi(connectionChanged)
 
 /** @type {HTMLDivElement} */
 const pageContent = document.querySelector("#page-content")
@@ -51,3 +81,30 @@ window.addEventListener("popstate", () => loadPageContent(window.location.pathna
 
 // Handle the page reload
 window.addEventListener("DOMContentLoaded", () => loadPageContent(window.location.pathname))
+
+// Hide or show the user option on the click of the name (needed for mobile responsivness)
+document.querySelector("#connected-user").addEventListener("click", () => {
+    dropdownContent.classList.toggle("show")
+})
+
+// Hide the user option on a click outside the name if it's currently showed
+window.addEventListener("click", (e) => {
+    if(!e.target.matches("#connected-user")) {
+        if ( dropdownContent.classList.contains("show")) {
+            dropdownContent.classList.remove("show")
+        }
+    }
+})
+
+// Add the function to the disconnect link
+document.querySelector("#disconnect-link").addEventListener("click", async(e) => {
+    e.preventDefault()
+    try {
+        await todoApi.disconnect()
+        window.location.assign("/")
+    } catch (err) {
+
+    }    
+})
+
+displayUser()
