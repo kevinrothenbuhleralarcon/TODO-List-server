@@ -33,7 +33,17 @@ class Task {
             row.description,
             row.status,
             dayJs(row.deadline).format("DD.MM.YYYY hh:mm:ss"),
-            row.todoId
+            row.todo_id
+        )
+    }
+
+    static fromJson(taskJson) {
+        return new Task (
+            taskJson.id,
+            taskJson.description,
+            taskJson.status,
+            taskJson.deadline,
+            taskJson.todoId
         )
     }
 }

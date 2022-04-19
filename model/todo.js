@@ -38,8 +38,8 @@ class Todo {
         return new Todo(
             row.id,
             row.title,
-            dayJs(row.created_at).format("DD.MM.YYYY hh:mm:ss"),
-            dayJs(row.last_updated_at).fromNow(),
+            new Date(row.created_at),
+            new Date(row.last_updated_at),
             null
         )
     }
@@ -53,8 +53,8 @@ class Todo {
         return new Todo(
             row.id,
             row.title,
-            dayJs(row.created_at).format("DD.MM.YYYY hh:mm:ss"),
-            dayJs(row.last_updated_at).format("DD.MM.YYYY hh:mm:ss"),
+            new Date(row.created_at),
+            new Date(row.last_updated_at),
             null
         )
     }
