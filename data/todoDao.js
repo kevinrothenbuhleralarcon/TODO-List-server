@@ -3,8 +3,9 @@
 const connection = require("../config/database")
 const Todo = require("../model/todo")
 const Task = require("../model/task")
-const dayJs = require("../config/dayjs")
 
+
+//GET
 
 /**
  * Return the list of Todo for a specific user
@@ -61,6 +62,34 @@ exports.getTodoById = async function(todoId, userId) {
     } catch (err) {
         console.log(err)
         return null
+    }
+}
+
+// ADD
+
+/**
+ * Add a new todo
+ * @param {Todo} todo
+ * @param {number} userId
+ * @returns {Promise<boolean>} Return true if the todo was correctly added 
+ */
+exports.addTodo = async function(todo, userId) {
+    try {
+        const [result, _] = await connection.promise().execute(
+            "INSERT INTO tbl_todos SET title = ?, created_at = ?, last_updated_at = ?, user_id = ?",
+            [todo.title, todo.createdAt, todo.lastUpdatedAt, userId]
+        )
+        if(result.insertId > 0) {
+            const [res, _] = await connection.promise().query(
+                "INSERT INTO tbl_tasks (description, status, deadline, todo_id) VALUES ?",
+                [todo.tasks.map(task => [task.description, task.status, task.deadline, result.insertId])],
+            )
+            return res.affectedRows == todo.tasks.length
+        }
+        return false
+    } catch (err) {
+        console.log(err)
+        return false
     }
 }
 

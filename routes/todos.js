@@ -26,6 +26,24 @@ exports.getTodo = async function (req, res) {
     res.status(200).json({todo: todo})
 }
 
+exports.addTodo = async function(req, res) {
+    const userId = req.userId
+    const tasks = [
+        new Task(null, "Create a first test todo", false, null, null),
+        new Task(null, "Create a first task for the first todo", false, null, null),
+        new Task(null, "Create a second task", false, null, null),
+        new Task(null, "Create a third task", false, null, null),
+    ]
+    const todo = new Todo(null, "test", new Date(), new Date(), tasks)
+    const result = await todoDao.addTodo(todo, userId)
+    if (result) {
+        res.status(200).send("ok")
+    } else {
+        res.status(400).send("not ok")
+    }
+    
+}
+
 
 //NOT CURRENTLY USED; FOR TEST PURPOSE ONLY
 exports.upDateTodo = async function (req, res){
