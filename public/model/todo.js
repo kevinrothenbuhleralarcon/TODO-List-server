@@ -9,8 +9,8 @@ export default class Todo {
      * Constructor
      * @param {number} id 
      * @param {String} title 
-     * @param {String} createdAt 
-     * @param {String} lastUpdatedAt 
+     * @param {Date} createdAt 
+     * @param {Date} lastUpdatedAt 
      * @param {Task[]} tasks 
      */
     constructor(
@@ -36,8 +36,8 @@ export default class Todo {
         return new Todo(
             todoDto.id,
             todoDto.title,
-            todoDto.createdAt,
-            todoDto.lastUpdatedAt,
+            new Date(todoDto.createdAt),
+            new Date(todoDto.lastUpdatedAt),
             todoDto.tasks
         )
     }
