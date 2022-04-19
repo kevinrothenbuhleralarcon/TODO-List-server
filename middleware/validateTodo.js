@@ -13,5 +13,7 @@ exports.validateAddTodo = async function(req, res, next) {
     if(!(title && createdAt && lastUpdatedAt && tasks)) {
         return res.status(400).send("Invalid data")
     }
-    
+    if(isNaN(new Date(createdAt) || isNaN(new Date(lastUpdatedAt)))) {
+        return res.status(400).send("Invalid data")
+    }
 }
