@@ -32,8 +32,7 @@ exports.getTodosByUserId = async function(userId) {
         }
         return null
     } catch (err) {
-        console.log(err)
-        return null
+        throw (err)
     }
 }
 
@@ -60,10 +59,10 @@ exports.getTodoById = async function(todoId, userId) {
         }
         return null
     } catch (err) {
-        console.log(err)
-        return null
+        throw (err)
     }
 }
+
 
 // ADD
 
@@ -88,10 +87,10 @@ exports.addTodo = async function(todo, userId) {
         }
         return false
     } catch (err) {
-        console.log(err)
-        return false
+        throw (err)
     }
 }
+
 
 // UPDATE
 
@@ -135,7 +134,27 @@ exports.addTodo = async function(todo, userId) {
         }))
         return true
     } catch (err) {
-        console.log(err)
+        throw (err)
+    }
+}
+
+//DELETE
+
+/**
+ * Delete an existing todo
+ * @param {number} todoId The id of the todo to delete
+ * @param {number} userId The connected user id
+ * @returns {Promise<boolean>} Return true if the todo was correctly updated 
+ */
+exports.deleteTodo = async function(todoId, userId) {
+    try {
+        const [deleteResult] = await connection.promise().execute(
+            "DELETE FROM tbl_todos WHERE id = ? AND user_id = ?",
+            [todoId, userId]
+        )
+        if(deleteResult.affectedRows > 0) return true
         return false
+    } catch (err) {
+        throw (err)
     }
 }

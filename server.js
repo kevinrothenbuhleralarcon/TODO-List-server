@@ -19,14 +19,15 @@ app.use("/static", express.static("public"))
 // User
 app.post("/api/register", usersManagement.registerUser)
 app.post("/api/login", usersManagement.loginUser)
-app.post("/api/deleteUser", auth, usersManagement.deleteUser)
+app.delete("/api/deleteUser", auth, usersManagement.deleteUser)
 app.post("/api/disconnect", auth, usersManagement.disconnectUser)
 
 // Todo
 app.get("/api/todoList", auth, todoManagement.getTodoList)
 app.get("/api/todo", auth, todoManagement.getTodo)
 app.post("/api/add", auth, validateTodo.validateAddTodo, todoManagement.addTodo)
-app.post("/api/update", auth, validateTodo.validateUpdateTodo, todoManagement.updateTodo)
+app.put("/api/update", auth, validateTodo.validateUpdateTodo, todoManagement.updateTodo)
+app.delete("/api/delete", auth, todoManagement.deleteTodo)
 
 
 // Web client entry point
