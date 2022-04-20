@@ -20,7 +20,7 @@ exports.getTodosByUserId = async function(userId) {
             )
         if(dbTodos.length > 0) {
             /** @type {Todo[]} */
-            const todos = dbTodos.map(row => Todo.fromRowFromNow(row) )
+            const todos = dbTodos.map(row => Todo.fromRow(row) )
             await Promise.all(todos.map(async todo => {
                 const [dbTasks, _] = await connection.promise().execute(
                     "SELECT * FROM tbl_tasks WHERE todo_id = ?",
@@ -98,40 +98,23 @@ exports.addTodo = async function(todo, userId) {
 /**
  * Update an existing Todo
  * @param {Todo} todo 
- * @returns {Promise<results>} Promise object representing the id of the updated user
+ * @returns {Promise<boolean>} Return true if the todo was correctly updated 
  */
  exports.updateTodo = async function(todo) {
-     
-    const results = []
-    const errors = []
-    console.log("Start update todo")
-    const test = await connection.execute(
-        "UPDATE tbl_todos SET id = ? , title = ?, created_at = ?, last_updated_at = ?, user_id = ? WHERE id = ?",
-        [todo.id, todo.title, todo.createdAt, todo.lastUpdatedAt, todo.userId, todo.id]
-        /*(err, result) => {
-            if(err) reject(err)
-            results.push(result)
-            console.log("End update todo")
-            //resolve(result)
-        }*/
-    )
-    console.log(test)
-    /*console.log("Start update tasks")
-    todo.tasks.forEach(task => {
-        console.log(`Start update task: ${task.id}`)
-        connection.execute(
-            "INSERT INTO tbl_tasks (id, description, status, deadline, todo_id) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES(id), description = VALUES(description), status = VALUES(status), deadline = VALUES(deadline), todo_id = VALUES(todo_id)",
-            [task.id, task.description, task.status, task.deadline, task.todoId],
-            (err, result) => {
-                if(err) reject(err)
-                //console.log(result)
-                results.push(result)
-                console.log(`End update task: ${task.id}`)
-            }
+    try {
+        const [result, _] = await connection.promise().execute(
+            "UPDATE tbl_todos SET title = ?, last_updated_at = ? WHERE id = ?",
+            [todo.title, todo.lastUpdatedAt, todo.id]
         )
-    })*/
-    return new Promise((resolve, reject) => {
-        console.log("resolve")
-        resolve(results)
-    })
+        await Promise.all(todo.tasks.map(async task => {
+            const [res, _] = await connection.promise().execute(
+                "INSERT INTO tbl_tasks (id, description, status, deadline, todo_id) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES(id), description = VALUES(description), status = VALUES(status), deadline = VALUES(deadline), todo_id = VALUES(todo_id)",
+                [task.id, task.description, task.status, task.deadline, todo.id]
+            )
+        }))
+        return true
+    } catch (err) {
+        console.log(err)
+        return false
+    }
 }
