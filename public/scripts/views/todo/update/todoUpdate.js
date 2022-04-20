@@ -39,6 +39,7 @@ export default class TodoUpdate extends AbstractView {
         if (todoId === null) return router("/")
         try {
             const todo = await this.#todoApi.getTodo(todoId)
+            if(todo === null) return router("/") 
             console.log(todo.title)
         } catch(err) {
             console.log(err)

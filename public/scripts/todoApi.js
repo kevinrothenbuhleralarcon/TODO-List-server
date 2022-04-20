@@ -108,6 +108,7 @@ export default class TodoApi {
             const response = await fetch("/api/todoList") 
             if (response.ok) {
                 const data = await response.json()
+                if(data.todos === null) return null
                 return data.todos.map(todo => Todo.fromApi(todo))
             } else {
                 if(response.status == 401) {
@@ -132,6 +133,9 @@ export default class TodoApi {
             const response = await fetch(`/api/todo?id=${id}`)
             if(response.ok) {
                 const data = await response.json()
+                if(data.todo === null) {
+                    return null
+                }
                 return Todo.fromApi(data.todo)
             } else {
                 if(response.status == 401) {
