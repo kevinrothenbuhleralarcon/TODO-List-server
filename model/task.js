@@ -1,7 +1,5 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
-const dayJs = require("../config/dayjs")
-
 /** Class representing a Task */
 class Task {
 
@@ -10,7 +8,7 @@ class Task {
      * @param {number} id 
      * @param {String} description 
      * @param {boolean} status 
-     * @param {?String} deadline 
+     * @param {Date} deadline 
      * @param {number} todoId 
      */
     constructor(
@@ -18,7 +16,7 @@ class Task {
         description,
         status = false,
         deadline = null,
-        todoId
+        todoId = null
     ) {
         this.id = id,
         this.description = description,
@@ -28,21 +26,29 @@ class Task {
     }
 
     static fromRow(row){
+        let deadline = null
+        if(row.deadline !== null) {
+            deadline = new Date(row.deadline)
+        }
         return new Task(
             row.id,
             row.description,
             Boolean(row.status),
-            dayJs(row.deadline).format("DD.MM.YYYY hh:mm:ss"),
+            deadline,
             row.todo_id
         )
     }
 
     static fromJson(taskJson) {
+        let deadline = null
+        if(taskJson.deadline !== undefined && taskJson.deadline !== null) {
+            deadline = new Date(taskJson.deadline)
+        }
         return new Task (
             taskJson.id,
             taskJson.description,
             taskJson.status,
-            taskJson.deadline,
+            deadline,
             taskJson.todoId
         )
     }
