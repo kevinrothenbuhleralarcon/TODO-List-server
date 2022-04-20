@@ -14,7 +14,7 @@ const Task = require("../model/task")
  */
 exports.getTodosByUserId = async function(userId) {
     try {
-        const [dbTodos, _] = await connection.promise().execute(
+        const [dbTodos] = await connection.promise().execute(
                 "SELECT * FROM tbl_todos WHERE user_id = ?", 
                 [userId]
             )
@@ -22,7 +22,7 @@ exports.getTodosByUserId = async function(userId) {
             /** @type {Todo[]} */
             const todos = dbTodos.map(row => Todo.fromRow(row) )
             await Promise.all(todos.map(async todo => {
-                const [dbTasks, _] = await connection.promise().execute(
+                const [dbTasks] = await connection.promise().execute(
                     "SELECT * FROM tbl_tasks WHERE todo_id = ?",
                     [todo.id]
                 )
@@ -45,13 +45,13 @@ exports.getTodosByUserId = async function(userId) {
  */
 exports.getTodoById = async function(todoId, userId) {
     try {
-        const [dbTodo, _] = await connection.promise().execute(
+        const [dbTodo] = await connection.promise().execute(
             "SELECT * FROM tbl_todos WHERE id = ? AND user_id = ? LIMIT 1",
             [todoId, userId]
         )
         if(dbTodo.length > 0) {
             const todo = Todo.fromRow(dbTodo[0])
-            const [dbTasks, _] = await connection.promise().execute(
+            const [dbTasks] = await connection.promise().execute(
                 "SELECT * FROM tbl_tasks WHERE todo_id = ?",
                 [todo.id]
             )
@@ -75,12 +75,12 @@ exports.getTodoById = async function(todoId, userId) {
  */
 exports.addTodo = async function(todo, userId) {
     try {
-        const [result, _] = await connection.promise().execute(
+        const [result] = await connection.promise().execute(
             "INSERT INTO tbl_todos SET title = ?, created_at = ?, last_updated_at = ?, user_id = ?",
             [todo.title, todo.createdAt, todo.lastUpdatedAt, userId]
         )
         if(result.insertId > 0) {
-            const [res, _] = await connection.promise().query(
+            const [res] = await connection.promise().query(
                 "INSERT INTO tbl_tasks (description, status, deadline, todo_id) VALUES ?",
                 [todo.tasks.map(task => [task.description, task.status, task.deadline, result.insertId])],
             )
@@ -102,12 +102,33 @@ exports.addTodo = async function(todo, userId) {
  */
  exports.updateTodo = async function(todo) {
     try {
-        const [result, _] = await connection.promise().execute(
+        // Update the todo
+       await connection.promise().execute(
             "UPDATE tbl_todos SET title = ?, last_updated_at = ? WHERE id = ?",
             [todo.title, todo.lastUpdatedAt, todo.id]
         )
+        // Delete the tasks not present in the task list
+        const [taskIds] = await connection.promise().execute(
+            "SELECT id from tbl_tasks WHERE todo_id = ?",
+            [todo.id]
+        )
+        /** @type {number[]} */
+        const taskToDelete = taskIds.reduce((result, taskId) => {
+            if(todo.tasks.find(task => task.id == taskId.id) === undefined) {
+                result.push(taskId.id)
+            }
+            return result
+        }, [])
+        if (taskToDelete.length > 0) {
+            await connection.promise().query(
+                "DELETE FROM tbl_tasks WHERE id IN (?)",
+                [taskToDelete],
+            )
+        }        
+
+        // Insert all the tasks and update the existing one
         await Promise.all(todo.tasks.map(async task => {
-            const [res, _] = await connection.promise().execute(
+            await connection.promise().execute(
                 "INSERT INTO tbl_tasks (id, description, status, deadline, todo_id) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES(id), description = VALUES(description), status = VALUES(status), deadline = VALUES(deadline), todo_id = VALUES(todo_id)",
                 [task.id, task.description, task.status, task.deadline, todo.id]
             )

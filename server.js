@@ -15,14 +15,18 @@ app.use(cookieParser())
 app.use("/static", express.static("public"))
 
 // API
-app.get("/api/todoList", auth, todoManagement.getTodoList)
-app.get("/api/todo", auth, todoManagement.getTodo)
 
+// User
 app.post("/api/register", usersManagement.registerUser)
 app.post("/api/login", usersManagement.loginUser)
 app.post("/api/deleteUser", auth, usersManagement.deleteUser)
 app.post("/api/disconnect", auth, usersManagement.disconnectUser)
+
+// Todo
+app.get("/api/todoList", auth, todoManagement.getTodoList)
+app.get("/api/todo", auth, todoManagement.getTodo)
 app.post("/api/add", auth, validateTodo.validateAddTodo, todoManagement.addTodo)
+app.post("/api/update", auth, validateTodo.validateUpdateTodo, todoManagement.updateTodo)
 
 
 // Web client entry point

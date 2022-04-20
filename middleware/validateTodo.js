@@ -1,12 +1,12 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
+const todoDao = require("../data/todoDao")
 
 /**
  * Validate that the json passed in the body with the todo is valid
  * @param {Request} req 
  * @param {Response} res 
  * @param {NextFunction} next 
- * @returns 
  */
 exports.validateAddTodo = async function(req, res, next) {
     const todo = req.body.todo
@@ -24,6 +24,49 @@ exports.validateAddTodo = async function(req, res, next) {
     }
     if(isNaN(new Date(todo.createdAt) || isNaN(new Date(todo.lastUpdatedAt)))) {
         return res.status(400).send("The dates are not in a valid format")
+    }
+
+    next()
+}
+
+/**
+ * Validate that the json passed in the body with the todo is valid, that the combine todo id and user id is valid and that the todo on the server has not been updated more recently
+ * @param {Request} req 
+ * @param {Response} res 
+ * @param {NextFunction} next 
+ */
+exports.validateUpdateTodo = async function(req, res, next) {
+    const todo = req.body.todo
+    if (todo === undefined) {
+        return res.status(400).send("Todo has to be defined")
+    }
+    if(todo.id === undefined || typeof todo.id != "number") {
+        return res.status(400).send("Todo id has to be defined and must be a number")
+    }
+    if(!(todo.title && todo.createdAt && todo.lastUpdatedAt && todo.tasks) || todo.tasks.length < 1) {
+        return res.status(400).send("Todo title, created at, last updated at and at least one task are required")
+    }
+    let areAllTasksValid = true
+    await Promise.all(todo.tasks.map(async task => {
+        if(!validateTask(task)) {
+            areAllTasksValid = false
+        }
+    }))
+    if(!areAllTasksValid) {
+        return res.status(400).send("Invalid Task data")
+    }
+    const lastUpdatedAt = new Date(todo.lastUpdatedAt)
+    if(isNaN(new Date(todo.createdAt) || isNaN(lastUpdatedAt))) {
+        return res.status(400).send("The dates are not in a valid format")
+    }
+    /** @type {number} */
+    const userId = req.userId
+    const storedTodo = await todoDao.getTodoById(todo.id, userId)
+    if (storedTodo === null) {
+        return res.status(400).send("No todo with this id for the connected user")
+    }
+    if(storedTodo.lastUpdatedAt > lastUpdatedAt) {
+        return res.status(400).send("The todo on the server has been more recently updated")
     }
 
     next()
