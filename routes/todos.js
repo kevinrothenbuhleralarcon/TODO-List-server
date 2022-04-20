@@ -28,20 +28,15 @@ exports.getTodo = async function (req, res) {
 
 exports.addTodo = async function(req, res) {
     const userId = req.userId
-    const tasks = [
-        new Task(null, "Create a first test todo", false, null, null),
-        new Task(null, "Create a first task for the first todo", false, null, null),
-        new Task(null, "Create a second task", false, null, null),
-        new Task(null, "Create a third task", false, null, null),
-    ]
-    const todo = new Todo(null, "test", new Date(), new Date(), tasks)
+    const reqTodo = req.body.todo
+    
+    const todo = new Todo(null, reqTodo.title, new Date(reqTodo.createdAt), new Date(reqTodo.lastUpdatedAt), reqTodo.tasks.map(task => Task.fromJson(task)))
     const result = await todoDao.addTodo(todo, userId)
     if (result) {
-        res.status(200).send("ok")
+        res.status(200).send("New todo added")
     } else {
-        res.status(400).send("not ok")
-    }
-    
+        res.status(400).send("Failed to insert the new todo")
+    }    
 }
 
 
