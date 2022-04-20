@@ -31,7 +31,7 @@ class Task {
         return new Task(
             row.id,
             row.description,
-            row.status,
+            Boolean(row.status),
             dayJs(row.deadline).format("DD.MM.YYYY hh:mm:ss"),
             row.todo_id
         )
