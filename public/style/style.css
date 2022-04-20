@@ -5,6 +5,8 @@
     --cardTextInfoColor: rgba(0, 0, 0, 0.6);
     --headerBackgroundColor: rgb(209, 60, 60);
     --footerBackgroundColor: #ccc;
+    --thumbnailWidth: 280px;
+    --thumbnailHeight: 158px;
 }
 
 * {
@@ -207,7 +209,8 @@ div.info li::before {
 }
 
 .todo-thumbnail {
-    width: 280px;
+    width: var(--thumbnailWidth);
+    height: var(--thumbnailHeight);
     margin: 10px 0;
     cursor: pointer;
     transition: scale 0.3s;
@@ -236,7 +239,12 @@ div.info li::before {
     height: 56px;
     width: 56px;
     border-radius: 50%;
-    background: var(--headerBackgroundColor) url(../res/icon/add_ic.svg) center center no-repeat;
+    background: 
+        var(--headerBackgroundColor) 
+        url("data:image/svg+xml;charset=utf8,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg color='white'%3E%3Crect x='2px' y='10.5px' width='20px' height='3px' fill='currentColor'/%3E%3Crect x='10.5px' y='2px' width='3px' height='20px' fill='currentColor'/%3E%3C/g%3E%3C/svg%3E") 
+        center 
+        center 
+        no-repeat;
     z-index: 100;
     box-shadow: 0px 0px 12px  rgba(0,0,0,0.8);
     cursor: pointer;
@@ -251,5 +259,29 @@ div.info li::before {
 
     .todo-thumbnail {
         margin: 10px;
+    }
+
+    .add-button {
+        position: relative;
+        width: var(--thumbnailWidth);
+        height: var(--thumbnailHeight);
+        transition: scale 0.3s;
+        right: auto;
+        bottom: auto;
+        margin: 10px;
+        border: solid 1px #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        background: 
+            var(--cardBackgroundColor)
+            url("data:image/svg+xml;charset=utf8,%3Csvg width='72px' height='72px' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg color='white'%3E%3Ccircle cx='24' cy='24' r='24' fill='rgba(209, 60, 60, 1)'/%3E%3Crect x='14px' y='22.5px' width='20px' height='3px' fill='currentColor'/%3E%3Crect x='22.5px' y='14px' width='3px' height='20px' fill='currentColor'/%3E%3C/g%3E%3C/svg%3E") 
+            center 
+            center 
+            no-repeat;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+
+    .add-button:hover {
+        scale: 1.08;
     }
 }
