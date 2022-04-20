@@ -12,7 +12,6 @@ class Todo {
      * @param {String} title 
      * @param {String} createdAt 
      * @param {String} lastUpdatedAt 
-     * @param {number} userId 
      * @param {Task[]} tasks 
      */
     constructor(
@@ -29,21 +28,6 @@ class Todo {
         this.tasks = tasks
     }
 
-    /**
-     * Return a new Todo from the database row with dayjs from now for last updatedAt
-     * @param {any} row 
-     * @returns {Todo}
-     */
-    static fromRowFromNow(row) {
-        return new Todo(
-            row.id,
-            row.title,
-            new Date(row.created_at),
-            new Date(row.last_updated_at),
-            null
-        )
-    }
-
      /**
      * Return a new Todo from the database row
      * @param {any} row 
@@ -56,6 +40,21 @@ class Todo {
             new Date(row.created_at),
             new Date(row.last_updated_at),
             null
+        )
+    }
+
+    /**
+     * Return a new Todo from the json received from the client
+     * @param {any} jsonTodo 
+     * @returns {Todo}
+     */
+    static fromJson(jsonTodo) {
+        return new Todo(
+            jsonTodo.id,
+            jsonTodo.title,
+            new Date(jsonTodo.createdAt),
+            new Date(jsonTodo.lastUpdatedAt),
+            jsonTodo.tasks.map(task => Task.fromJson(task))
         )
     }
 }
