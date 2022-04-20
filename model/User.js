@@ -27,7 +27,22 @@ class User {
         this.token = token
         this.active = active
     }
-    
+
+    /**
+     * Return a new User from the database row
+     * @param {any} row 
+     * @returns {User}
+     */
+    static fromRow(row) {
+        return new User(
+            row.id,
+            row.username,
+            row.email,
+            row.password,
+            row.token,
+            row.active
+        )
+    }
 }
 
 module.exports = User

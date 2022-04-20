@@ -3,17 +3,6 @@
 const connection = require("../config/database")
 const User = require("../model/user")
 
-const convertUser = function(dbUser) {
-    return new User(
-        dbUser.id,
-        dbUser.username,
-        dbUser.email,
-        dbUser.password,
-        dbUser.token,
-        dbUser.active
-    )
-}
-
 // SELECT
 
 /**
@@ -29,7 +18,7 @@ const convertUser = function(dbUser) {
             (err, result) => {
                 if (err) reject(err)
                 if (result[0] !== undefined ) {
-                    resolve(convertUser(result[0]))
+                    resolve(User.fromRow(result[0]))
                 } else {
                     resolve(null)
                 }                
@@ -51,7 +40,7 @@ const convertUser = function(dbUser) {
             (err, result) => {
                 if (err) reject(err)
                 if (result[0] !== undefined ) {
-                    resolve(convertUser(result[0]))
+                    resolve(User.fromRow(result[0]))
                 } else {
                     resolve(null)
                 }                
@@ -73,7 +62,7 @@ exports.getUserByEmail = function(email) {
             (err, result) => {
                 if (err) reject(err)
                 if (result[0] !== undefined ) {
-                    resolve(convertUser(result[0]))
+                    resolve(User.fromRow(result[0]))
                 } else {
                     resolve(null)
                 }                
