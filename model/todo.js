@@ -1,7 +1,6 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
 const Task = require("./task")
-const dayJs = require("../config/dayjs")
 
 /** Class representing a Todo */
 class Todo {
@@ -10,8 +9,8 @@ class Todo {
      * Constructor
      * @param {number} id 
      * @param {String} title 
-     * @param {String} createdAt 
-     * @param {String} lastUpdatedAt 
+     * @param {Date} createdAt 
+     * @param {Date} lastUpdatedAt 
      * @param {Task[]} tasks 
      */
     constructor(
