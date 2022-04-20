@@ -8,12 +8,23 @@ export default class TodoUpdate extends AbstractView {
     /** @type {!TodoApi} */
     #todoApi
 
+    /** @type {?number} */
+    #todoId
+
      /**
      * Constructor
      * @param {TodoApi} todoApi
      */
     constructor(todoApi) {
-        super("Todo update")
+        const queryString = window.location.search
+        const urlParams = new URLSearchParams(queryString)
+        const id = urlParams.get("id")
+        if(id === null) {
+            super("New todo")
+        } else {
+            super(`Edit todo ${id}`)
+        }
+        this.#todoId = id
         this.#todoApi = todoApi
     }
 
@@ -22,7 +33,7 @@ export default class TodoUpdate extends AbstractView {
      * @returns {Promise<String>}
      */
     async getHtml() {
-        const response = await fetch("./static/scripts/views/todo/update/todoupdate.html")
+        const response = await fetch("./static/scripts/views/todo/detail/todoDetail.html")
         const htmlContent = await response.text()
         return htmlContent  
     }
@@ -33,14 +44,9 @@ export default class TodoUpdate extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
-        const queryString = window.location.search
-        const urlParams = new URLSearchParams(queryString)
-        const todoId = urlParams.get("id")
-        if (todoId === null) return router("/")
         try {
-            const todo = await this.#todoApi.getTodo(todoId)
-            if(todo === null) return router("/") 
-            console.log(todo.title)
+            const todo = await this.#todoApi.getTodo(this.#todoId)
+            console.log(todo)
         } catch(err) {
             console.log(err)
             router("/") 

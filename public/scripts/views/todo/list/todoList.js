@@ -64,6 +64,7 @@ export default class Todolist extends AbstractView {
         /** @type {HTMLButtonElement} */
         const button = document.createElement("button")
         button.classList.add("add-button")
+        button.addEventListener("click", () => this.#router(`/detail`))
         this.#todoListPageContent.appendChild(button)
     }
 
@@ -108,6 +109,6 @@ export default class Todolist extends AbstractView {
      * @param {number} id 
      */
     #cardClick(id) {
-        this.#router(`/update?id=${id}`)
+        this.#router(`/detail?id=${id}`)
     }
 }
