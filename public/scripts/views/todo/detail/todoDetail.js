@@ -2,6 +2,7 @@
 
 import TodoApi from "../../../todoApi.js"
 import AbstractView from "../../abstractView.js"
+import Todo from "../../../../model/todo.js"
 
 export default class TodoUpdate extends AbstractView {
 
@@ -44,6 +45,14 @@ export default class TodoUpdate extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
+        /** @type {HTMLHeadingElement} */
+        const pageTitle = document.querySelector("h1")
+        if (this.#todoId === null) {
+            pageTitle.innerHTML = "New todo"
+        } else {
+            pageTitle.innerHTML = `Edit todo ${this.#todoId}`
+        }
+
         try {
             const todo = await this.#todoApi.getTodo(this.#todoId)
             console.log(todo)

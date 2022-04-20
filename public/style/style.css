@@ -27,7 +27,6 @@ header {
     display: flex;
     align-items: center;
     width: 100vw;
-    /*height: 60px;*/
     background-color: var(--headerBackgroundColor);
 }
 
@@ -130,7 +129,9 @@ header {
     margin-top: 10px;
 }
 
-.form-content input {
+.form-content input, 
+.form-content textarea{
+    position: relative;
     width: 100%;
     border: 1px solid var(--footerBackgroundColor);
     height: auto;
@@ -139,8 +140,13 @@ header {
     margin-bottom: -1px;
 }
 
-.form-content input:focus {
+.form-content input:focus,
+.form-content textarea:focus {
     z-index: 100; /* Allow the focus border to be displayed on top of other elements */
+}
+
+.form-content textarea {
+    resize: none;
 }
 
 .form-content input.top {
@@ -250,6 +256,33 @@ div.info li::before {
     cursor: pointer;
 }
 
+.task-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.task-content input[type=checkbox] {
+    flex: none;
+    width: auto;
+    margin-right: 20px;
+}
+
+.task-content input[type=date] {
+    flex: none;
+    width: auto;
+}
+
+.task-content .task-content-button {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-top: 0;
+    margin-left: 20px;
+}
+
 @media only screen and (min-width: 800px) {
     #todo-list-content {
         flex-direction: row;
@@ -283,5 +316,10 @@ div.info li::before {
 
     .add-button:hover {
         scale: 1.08;
+    }
+
+    .todo-detail {
+        min-width: 60vw;
+        margin: 0 20vw;
     }
 }
