@@ -25,10 +25,13 @@ const dropdownContent = document.querySelector(".dropdown-content")
 const displayUser = function() {
     const dropdown = document.querySelector(".dropdown")
     const connectedUser = window.localStorage.getItem("username")
+    const header = document.querySelector("header")
     if (connectedUser !== null) {
+        header.classList.remove("with-height")
         dropdown.classList.remove("hidden")
         dropdown.querySelector("#connected-user").innerHTML = connectedUser
     } else {
+        header.classList.add("with-height")
         dropdown.classList.add("hidden")
     }
 }

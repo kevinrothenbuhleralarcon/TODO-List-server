@@ -98,8 +98,8 @@ export default class Todolist extends AbstractView {
         }
         const todoCard = this.#todoCardTemplate.cloneNode(true)
         todoCard.querySelector(".thumbnail-title").innerText = todo.title
-        todoCard.querySelector(".created-at").innerText += todo.createdAt.toLocaleString("fr-ch")
-        todoCard.querySelector(".last-updated-at").innerText += todo.lastUpdatedAt.toLocaleString("fr-ch")
+        todoCard.querySelector(".created-at").innerHTML += `<br><em>${todo.createdAt.toLocaleString("fr-ch")}</em>`
+        todoCard.querySelector(".last-updated-at").innerHTML += `<br><em>${todo.lastUpdatedAt.toLocaleString("fr-ch")}</em>`
         todoCard.addEventListener("click", () => this.#cardClick(todo.id))
         this.#todoListPageContent.appendChild(todoCard)
     }

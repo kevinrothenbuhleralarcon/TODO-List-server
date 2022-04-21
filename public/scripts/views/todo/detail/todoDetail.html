@@ -5,18 +5,10 @@
     <form id="todo">
         <div class="form-content">
             <input type="text" name="todoTitle" id="todoTitle" placeholder="Title" required>
-            <div class="task-content">
-                <input type="checkbox" name="status" id="status">
-                <div class="task-content-detail">
-                    <textarea name="description" id="description"></textarea>
-                    <div class="task-deadline">
-                        <label for="deadline">Deadline:</label>
-                        <input type="date" name="deadline" id="deadline">   
-                    </div>                    
-                </div> 
-                <button class="task-content-button"></button>               
-            </div>
-            <button type="submit" id="submit">Submit</button>
+            <button class="task-add-btn"></button>
+            <div class="todo-form-button">
+                <button type="submit" id="submit">Save</button>
+            </div>            
         </div>
     </form>
 </div>
