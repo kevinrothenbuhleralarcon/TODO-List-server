@@ -78,13 +78,13 @@ exports.validateUpdateTodo = async function(req, res, next) {
  * @returns {Boolean} 
  */
 const validateTask = function(task) {
-    if(task.id !== undefined && typeof task.id != "number") {
+    if(task.id !== undefined && (task.id != null && typeof task.id != "number")) {
         return false
     }
-    if(task.todoId !== undefined && typeof task.todoId != "number") {
+    if(task.todoId !== undefined && (task.todoId != null && typeof task.todoId != "number")) {
         return false
     }
-    if(task.deadline !== undefined && isNaN(new Date(task.deadline))) {
+    if(task.deadline !== undefined && (task.deadline != null && isNaN(new Date(task.deadline)))) {
         return false
     }
     return (task.description !== undefined) && (task.status !== undefined) && (typeof task.status == "boolean")
