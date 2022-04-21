@@ -83,6 +83,9 @@ export default class TodoApi {
         }        
     }
 
+    /**
+     * API call for user disconnection
+     */
     async disconnect() {
         try {
             const response = await fetch ("/api/disconnect", {
@@ -147,5 +150,100 @@ export default class TodoApi {
         } catch (err) {
             throw (err)
         }        
+    }
+
+    /**
+     * API call for adding a todo to the connected user
+     * @param {Todo} todo 
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+    async addTodo(todo) {
+        try {
+            const response = await fetch("/api/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({todo: todo})
+            })
+
+            if (response.ok) {
+                return {
+                    ok: true,
+                    value: null
+                }
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                } 
+            }
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    /**
+     * API call for updating a todo of the connected user
+     * @param {Todo} todo 
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+    async updateTodo(todo) {
+        try {
+            const response = await fetch("/api/update", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({todo: todo})
+            })
+
+            if (response.ok) {
+                return {
+                    ok: true,
+                    value: null
+                }
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                } 
+            }
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    /**
+     * API call for deleting a todo of the connected user
+     * @param {number} todoId 
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+     async deleteTodo(todoId) {
+        try {
+            const response = await fetch(`/api/delete?id=${todoId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+
+            if (response.ok) {
+                return {
+                    ok: true,
+                    value: null
+                }
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                } 
+            }
+        } catch (err) {
+            throw (err)
+        }
     }
 }
