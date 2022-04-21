@@ -32,7 +32,7 @@ export default class TodoUpdate extends AbstractView {
         } else {
             super(`Edit todo ${id}`)
         }
-        this.#todoId = Number(id)
+        this.#todoId = id == null ? null : Number(id)
         this.#todoApi = todoApi
         this.#emptyTaskTemplate = null
         this.#errorDiv = null
@@ -119,6 +119,7 @@ export default class TodoUpdate extends AbstractView {
         })
 
         /** Set the title of the body and load the todo */
+        console.log(this.#todoId)
         if (this.#todoId === null) {
             document.querySelector("h1").innerHTML = "New todo"
         } else {
