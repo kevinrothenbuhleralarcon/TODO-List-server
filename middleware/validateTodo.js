@@ -40,7 +40,7 @@ exports.validateUpdateTodo = async function(req, res, next) {
     if (todo === undefined) {
         return res.status(400).send("Todo has to be defined")
     }
-    if(todo.id === undefined || typeof todo.id != "number") {
+    if(todo.id === undefined || isNaN(Number(todo.id))) {
         return res.status(400).send("Todo id has to be defined and must be a number")
     }
     if(!(todo.title && todo.createdAt && todo.lastUpdatedAt && todo.tasks) || todo.tasks.length < 1) {
@@ -78,7 +78,7 @@ exports.validateUpdateTodo = async function(req, res, next) {
  * @returns {Boolean} 
  */
 const validateTask = function(task) {
-    if(task.id !== undefined && (task.id != null && typeof task.id != "number")) {
+    if(task.id !== undefined && (task.id != null && isNaN(Number(task.id)))) {
         return false
     }
     if(task.todoId !== undefined && (task.todoId != null && typeof task.todoId != "number")) {

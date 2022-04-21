@@ -45,11 +45,11 @@ class Task {
             deadline = new Date(taskJson.deadline)
         }
         return new Task (
-            taskJson.id,
+            taskJson.id == null ? null : Number(taskJson.id),
             taskJson.description,
             taskJson.status,
             deadline,
-            taskJson.todoId
+            taskJson.todoId == null ? null : Number(taskJson.todoId) 
         )
     }
 }

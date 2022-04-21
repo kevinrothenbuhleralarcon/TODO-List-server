@@ -49,7 +49,7 @@ class Todo {
      */
     static fromJson(jsonTodo) {
         return new Todo(
-            jsonTodo.id,
+            jsonTodo.id == null ? null : Number(jsonTodo.id),
             jsonTodo.title,
             new Date(jsonTodo.createdAt),
             new Date(jsonTodo.lastUpdatedAt),
