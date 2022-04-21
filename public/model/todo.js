@@ -38,7 +38,7 @@ export default class Todo {
             todoDto.title,
             new Date(todoDto.createdAt),
             new Date(todoDto.lastUpdatedAt),
-            todoDto.tasks
+            todoDto.tasks.map(task => Task.fromApi(task))
         )
     }
 }

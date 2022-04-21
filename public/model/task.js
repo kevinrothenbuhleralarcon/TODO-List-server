@@ -8,7 +8,7 @@ export default class Task {
      * @param {number} id 
      * @param {String} description 
      * @param {boolean} status 
-     * @param {?String} deadline 
+     * @param {?Date} deadline 
      * @param {number} todoId 
      */
     constructor(
@@ -23,5 +23,19 @@ export default class Task {
         this.status = status,
         this.deadline = deadline,
         this.todoId = todoId
+    }
+
+    static fromApi(taskDto) {
+        let deadline = null
+        if(taskDto.deadline !== null) {
+            deadline = new Date(taskDto.deadline)
+        }
+        return new Task(
+            taskDto.id,
+            taskDto.description,
+            taskDto.status,
+            deadline,
+            taskDto.todoId
+        )
     }
 }
