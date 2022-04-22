@@ -4,6 +4,7 @@
     --cardBackgroundColor: #f7f7f7;
     --cardTextInfoColor: rgba(0, 0, 0, 0.6);
     --headerBackgroundColor: rgb(209, 60, 60);
+    --headerHeight: 46px;
     --footerBackgroundColor: #ccc;
     --thumbnailWidth: 280px;
     --thumbnailHeight: 158px;
@@ -21,17 +22,24 @@ body {
     min-width: 100%;
     min-height: 100vh;
     font-family: sans-serif;
+    font-size: 16px;
+}
+
+h1 {
+    margin-top: 0;
 }
 
 header {
+    position: fixed;
     display: flex;
     align-items: center;
     width: 100%;
     background-color: var(--headerBackgroundColor);
+    z-index: 10000;
 }
 
 header.with-height {
-    height: 46px;
+    height: var(--headerHeight);
 }
 
 .hidden {
@@ -108,7 +116,8 @@ header.with-height {
     justify-content: start;
     align-items: center;
     width: 100%;
-    margin: 20px 0;
+    margin-top: calc(var(--headerHeight) + 20px);
+    margin-bottom: 20px;
     padding: 0 10px;
     text-align: center;
     min-width: 350px;
@@ -147,7 +156,6 @@ header.with-height {
     position: relative;
     width: 100%;
     border: 1px solid var(--footerBackgroundColor);
-    /*height: auto;*/
     font-size: 16px;
     padding: 10px;
     margin-bottom: -1px;
@@ -279,9 +287,13 @@ div.info li::before {
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    margin: 10px 0;
+    margin-top: 10px;
     border-top: 1px solid #ccc;
     padding-top: 10px;
+}
+
+.task-content input{
+    padding: 3px;
 }
 
 .task-content input[type=checkbox] {
@@ -295,10 +307,11 @@ div.info li::before {
     width: auto;
 }
 
-.form-content .task-add-btn {
+.todo-button .task-add-btn {
     height: 30px;
     width: 30px;
     border-radius: 50%;
+    margin-top: 10px;
     margin-left: auto;
     background: 
         var(--headerBackgroundColor) 
@@ -331,12 +344,17 @@ div.info li::before {
     text-align: right;
 }
 
-.task-deadline label {
-    margin-right: 5px;
-}
-
 .line-through {
     text-decoration: line-through;
+}
+
+.todo-button {
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
 }
 
 @media only screen and (min-width: 800px) {

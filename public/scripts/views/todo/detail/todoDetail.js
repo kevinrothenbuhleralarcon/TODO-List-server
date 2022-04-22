@@ -123,7 +123,6 @@ export default class TodoUpdate extends AbstractView {
         if (this.#todoId === null) {
             document.querySelector("h1").innerHTML = "New todo"
         } else {
-            document.querySelector("h1").innerHTML = `Edit todo ${this.#todoId}`
             try {
                 await this.#loadTodo()
 
@@ -168,6 +167,7 @@ export default class TodoUpdate extends AbstractView {
                     }                    
                 }
             }
+            document.querySelector("h1").innerHTML = todo.title
         } catch(err) {
             console.log(err)
         }        
@@ -208,7 +208,7 @@ export default class TodoUpdate extends AbstractView {
         }, {once: true})
         /** @type {HTMLDivElement} */
         const container = document.querySelector(".form-content")
-        container.insertBefore(taskNode, container.querySelector(".todo-form-button"))
+        container.insertBefore(taskNode, container.querySelector(".todo-button"))
         return taskNode
     }
 
