@@ -34,7 +34,8 @@ header {
     display: flex;
     align-items: center;
     width: 100%;
-    background-color: var(--headerBackgroundColor);
+    background: rgb(209, 60, 60); /* IE Support */
+    background: var(--headerBackgroundColor);
     z-index: 10000;
 }
 
@@ -43,14 +44,36 @@ header.with-height {
 }
 
 #logo {
+    position: relative;
     cursor: pointer;
     border: none;
     outline: none;
     color:#FFFFFF;
-    background-color: inherit;
-    padding: 14px 20px;
+    background: Black;
+    padding: 14px 40px 14px 20px;
     font: inherit;
     font-weight: bold;
+    margin-right: 20px;
+    transition: background-color 0.3s;
+}
+
+#logo::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    margin-left: 40px;
+    border-left: 30px solid black;
+    border-top: var(--headerHeight) solid var(--headerBackgroundColor);
+    transition: border-left 0.3s
+}
+
+#logo:hover {
+    background: var(--headerBackgroundColor);
+}
+
+#logo:hover:after {
+    border-left: 30px solid var(--headerBackgroundColor);
 }
 
 .hidden {
@@ -79,6 +102,7 @@ header.with-height {
     background-color: inherit;
     padding: 14px 20px;
     font: inherit;
+    transition: background-color 0.3s;
 }
 
 #connected-user::after {
@@ -91,8 +115,7 @@ header.with-height {
 }
 
 #connected-user:hover,
-#connected-user:focus,
-#logo:hover  {
+#connected-user:focus {
     background-color: #000000;
 }
 
