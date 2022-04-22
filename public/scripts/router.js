@@ -61,10 +61,15 @@ const pageContent = document.querySelector("#page-content")
 const loadPageContent = async function (path) {
     const route = routes.find(route => route.path == path)
     if (route) {
-        /** @type {AbstractView} */
-        const view = new route.view(todoApi)
-        pageContent.innerHTML = await view.getHtml()
-        await view.executeViewScript(router)
+        if((route.path == "/login" || route.path =="/register") && window.localStorage.getItem("username") !== null) {
+            window.location.assign("/")
+        }
+        else {
+            /** @type {AbstractView} */
+            const view = new route.view(todoApi)
+            pageContent.innerHTML = await view.getHtml()
+            await view.executeViewScript(router)
+        }       
     } else {
         window.location.assign("/")
     }    
