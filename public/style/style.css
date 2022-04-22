@@ -53,7 +53,6 @@ header.with-height {
     margin-right: 0;
     vertical-align: middle;
     text-align: right;
-    font-size: 16px;
     font-weight: bold;
 }
 
@@ -101,8 +100,15 @@ header.with-height {
 .dropdown-content a {
     display: block;
     color: #000000;
-    padding: 14px 20px;
+    padding: 5px 10px;
     text-decoration: none;
+}
+.dropdown-content a:first-child {
+    padding-top: 10px;
+}
+
+.dropdown-content a:last-child {
+    padding-bottom: 10px;
 }
 
 .dropdown-content a:hover {
