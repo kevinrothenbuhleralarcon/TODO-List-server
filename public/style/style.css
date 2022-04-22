@@ -42,6 +42,17 @@ header.with-height {
     height: var(--headerHeight);
 }
 
+#logo {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color:#FFFFFF;
+    background-color: inherit;
+    padding: 14px 20px;
+    font: inherit;
+    font-weight: bold;
+}
+
 .hidden {
     display: none!important;
 }
@@ -80,7 +91,8 @@ header.with-height {
 }
 
 #connected-user:hover,
-#connected-user:focus  {
+#connected-user:focus,
+#logo:hover  {
     background-color: #000000;
 }
 

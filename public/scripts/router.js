@@ -115,4 +115,6 @@ document.querySelector("#disconnect-link").addEventListener("click", async(e) =>
     }    
 })
 
+document.querySelector("#logo").addEventListener("click", (e) => window.location.assign("/"))
+
 displayUser()
