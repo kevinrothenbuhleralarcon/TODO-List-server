@@ -7,13 +7,15 @@ import Login from "./views/auth/login.js"
 import Register from "./views/auth/register.js"
 import TodoList from "./views/todo/list/todoList.js"
 import TodoDetail from "./views/todo/detail/todoDetail.js"
+import Settings from "./views/settings/settings.js"
 
 /** @type {Array.<{path: string, view: AbstractView>}>} */
 const routes = [  
-    { path: '/', view: TodoList },
-    { path: '/detail', view: TodoDetail },
-    { path: '/login', view: Login },
-    { path: '/register', view: Register }
+    { path: "/", view: TodoList },
+    { path: "/detail", view: TodoDetail },
+    { path: "/login", view: Login },
+    { path: "/register", view: Register },
+    { path: "/settings", view: Settings}
 ]
 
 /** @type {HTMLDivElement} */
