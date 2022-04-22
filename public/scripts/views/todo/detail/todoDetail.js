@@ -119,7 +119,6 @@ export default class TodoUpdate extends AbstractView {
         })
 
         /** Set the title of the body and load the todo */
-        console.log(this.#todoId)
         if (this.#todoId === null) {
             document.querySelector("h1").innerHTML = "New todo"
         } else {
@@ -132,12 +131,15 @@ export default class TodoUpdate extends AbstractView {
                 deleteButton.innerHTML = "Delete"
                 deleteButton.addEventListener("click", async (e) => {
                     e.preventDefault()
-                    const result = await this.#todoApi.deleteTodo(this.#todoId)
-                    if (result.ok) {
-                        router("/")
-                    } else {
-                        this.#displayError([result.value])
-                    }
+
+                    if(window.confirm("Are you sure you want to delete this todo?")) {
+                        const result = await this.#todoApi.deleteTodo(this.#todoId)
+                        if (result.ok) {
+                            router("/")
+                        } else {
+                            this.#displayError([result.value])
+                        }
+                    }                    
                 })
                 document.querySelector(".todo-form-button").append(deleteButton)
             } catch (err) {
