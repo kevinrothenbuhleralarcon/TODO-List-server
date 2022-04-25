@@ -16,8 +16,8 @@ export default class TodoUpdate extends AbstractView {
     /** @type {?HTMLDivElement} */
     #emptyTaskTemplate
 
-     /** @type {?HTMLDivElement} */
-     #errorDiv
+    /** @type {?HTMLDivElement} */
+    #errorDiv
 
      /**
      * Constructor
