@@ -121,7 +121,7 @@ exports.getUserToken = async function (userId) {
 /**
  * Update an existing user
  * @param {User} user 
- * @returns {Promise} Promise object representing the id of the updated user
+ * @returns {Promise<boolean>} Return true if the user has been updated
  */
 exports.updateUser = function(user) {
     return new Promise((resolve, reject) => {
@@ -130,7 +130,7 @@ exports.updateUser = function(user) {
             [user.username, user.email, user.password, user.token, user.active, user.id],
             (err, result) => {
                 if (err) reject(err)
-                resolve(result)
+                resolve(true)
             }
         )
     })

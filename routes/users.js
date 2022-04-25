@@ -125,9 +125,41 @@ exports.disconnectUser = async function(req, res) {
 exports.updateUser = async function(req, res) {
     const userId = req.userId
     const {username, password, email} = req.body
-    console.log(`username: ${username}`)
-    console.log(`password: ${password}`)
-    console.log(`email: ${email}`)
+    if(username === undefined && password === undefined && email === undefined) return res.status(400).send("Nothing to change")
+    try {
+        const user = await userDao.getUserById(userId)
+
+        if(username !== undefined) {
+            const existingUser = await userDao.getUserByUsername(username)
+            if(existingUser !== null) return res.status(400).send("Username already in use.")
+            user.username = username
+        }
+
+        if(email !== undefined) {
+            const existingUser = await userDao.getUserByEmail(email)
+            if(existingUser !== null) return res.status(400).send("Email already in use.")
+            user.email = email
+        }
+
+        if(password !== undefined) {
+            const encryptedPassword = await bcrypt.hash(password, 10)
+            user.password = encryptedPassword
+        }
+        
+        const update = await userDao.updateUser(user)
+        if(update) {
+            res.status(200).json({
+                res: "User updated",
+                username : user.username
+            })
+        } else {
+            res.status(400).send("Could not update the user")
+        }
+        
+    } catch (err) {
+        console.log(err)
+        res.status(500).send("Server error")
+    }
 }
 
 /**
