@@ -120,6 +120,27 @@ exports.disconnectUser = async function(req, res) {
 }
 
 /**
+ * Get info of the connected user
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+
+exports.getUser = async function(req, res) {
+    const userId = req.userId
+    try {
+        const user = await userDao.getUserById(userId)
+        if(user === null) return res.status(400).send("No user")
+        res.status(200).json({
+            username : user.username,
+            email : user.email
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).send("Server error")
+    }    
+}
+
+/**
  * Update an existing user
  * @param {Request} req 
  * @param {Response} res 
