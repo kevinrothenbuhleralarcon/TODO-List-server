@@ -18,10 +18,10 @@ export default class Task {
         deadline = null,
         todoId
     ) {
-        this.id = id,
-        this.description = description,
-        this.status = status,
-        this.deadline = deadline,
+        this.id = id
+        this.description = description
+        this.status = status
+        this.deadline = deadline
         this.todoId = todoId
     }
 
