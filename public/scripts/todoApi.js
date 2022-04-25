@@ -1,6 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
 import Todo from "../model/todo.js"
+import User from "../model/user.js"
 
 export default class TodoApi {
 
@@ -81,6 +82,22 @@ export default class TodoApi {
         } catch (err) {
             throw (err)
         }        
+    }
+
+    /**
+     * API call for getting the connected user
+     */
+    async getUser() {
+        try {
+            const response = await fetch("/api/user")
+            if(response.ok) {
+                const data = await response.json()
+                return User.fromApi(data)
+            } 
+                return null
+        } catch (err) {
+            throw (err)
+        }
     }
 
     /**
