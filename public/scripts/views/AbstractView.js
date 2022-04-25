@@ -17,7 +17,7 @@ export default class AbstractView {
 
     /**
      * Return the html content of the page
-     * @returns {String} html content
+     * @returns {Promise<String>} html content
      */
     async getHtml() {
         return ""
