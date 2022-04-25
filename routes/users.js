@@ -18,6 +18,8 @@ exports.registerUser = async function(req, res) {
             return res.status(400).send("All input are required")
         }
 
+        if(!validatePassword(password)) return res.status(400).send("Invalid password template")
+
         // Check if we already have an existing user with the email or username
         let oldUser = await userDao.getUserByEmail(email)
         if (oldUser !== null) {
@@ -142,6 +144,7 @@ exports.updateUser = async function(req, res) {
         }
 
         if(password !== undefined) {
+            if(!validatePassword(password)) return res.status(400).send("Invalid password template")
             const encryptedPassword = await bcrypt.hash(password, 10)
             user.password = encryptedPassword
         }
@@ -212,4 +215,9 @@ const generateJsonResponseWithToken = function (username, token) {
         "token-lifetime" : process.env.TOKEN_LIFE + "h",
         "token" : token
     }
+}
+
+const validatePassword = function (password) {
+    const regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*!@#%^&(){}\[\]:;<>,\\.?/~_+\-=|]).{8,}$/)
+    return regex.test(password)
 }
