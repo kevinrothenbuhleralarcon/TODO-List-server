@@ -399,6 +399,8 @@ div.info li::before {
 }
 
 .tab {
+    width: 100%;
+    margin: 0 20px;
     display: flex;
     flex-direction: column;
 }
@@ -477,7 +479,8 @@ div.info li::before {
         scale: 1.08;
     }
 
-    .todo-detail {
+    .todo-detail,
+    .tab {
         width: calc(100% - 20vw);
         margin: 0 10vw;
     }

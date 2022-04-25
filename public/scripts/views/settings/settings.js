@@ -25,7 +25,15 @@ export default class Settings extends AbstractView {
         try {
             const response = await fetch("./static/scripts/views/settings/settings.html")
             const htmlContent = await response.text()
-            return htmlContent  
+            /** @type {HTMLDivElement} */
+            const settings = document.createRange().createContextualFragment(htmlContent).querySelector(".settings")
+            const linkList = settings.querySelectorAll(".tab-header a")
+            for (const a of linkList) {
+                const strContent = await fetch(`./static/scripts/views/settings/tabs/${(a.hash).substring(1)}.html`).then(response => response.text())
+                const docContent = document.createRange().createContextualFragment(strContent).querySelector(".tab-content")
+                settings.querySelector(".form-content").insertBefore(docContent, settings.querySelector("#submit"))
+            }
+            return settings.innerHTML 
         } catch (err){
             return null
         }       
@@ -55,11 +63,21 @@ export default class Settings extends AbstractView {
         const tabDiv = a.parentNode.parentNode.parentNode
         if(a.parentNode.classList.contains("active")) return false
 
+        // Remove the active class for the currently active link and add it to the clicked link
         const activeLink = tabDiv.querySelector(".tab-header .active")
-        console.log(activeLink)
         activeLink.classList.remove("active")
-        console.log(a.parentNode)
         a.parentNode.classList.add("active")
-    }
 
+        // Remove the active class for the currently active tab content and add it the the content linked to the clicked link
+        const activeContent = tabDiv.querySelector(".tab-contents .active")
+        activeContent.classList.remove("active")
+        const selectedContent = tabDiv.querySelector(`.tab-contents ${a.hash}`)
+        selectedContent.classList.add("active")
+
+        if(a.hash === "#delete") {
+            document.querySelector("#submit").textContent = "Delete"
+        } else {
+            document.querySelector("#submit").textContent = "Submit"
+        }
+    }
 }
