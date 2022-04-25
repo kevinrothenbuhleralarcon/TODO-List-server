@@ -42,6 +42,13 @@ export default class Login extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
+        document.querySelectorAll("#page-content a").forEach(a => {
+            a.addEventListener("click", (e) => {
+                e.preventDefault()
+                router(a.pathname)
+            })
+        })
+
         this.#button = document.querySelector("#submit")
         this.#form = document.querySelector("#login")
         if(!(this.#button && this.#form)) return

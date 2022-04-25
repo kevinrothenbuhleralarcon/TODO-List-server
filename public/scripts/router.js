@@ -87,10 +87,16 @@ function router (path) {
 }
 
 // Handle the navigate back and forward
-window.addEventListener("popstate", () => loadPageContent(window.location.pathname))
+window.addEventListener("popstate", () => {
+    console.log("popstate")
+    loadPageContent(window.location.pathname)
+})
 
 // Handle the page reload
-window.addEventListener("DOMContentLoaded", () => loadPageContent(window.location.pathname))
+window.addEventListener("DOMContentLoaded", () => {
+    console.log("dom loaded")
+    loadPageContent(window.location.pathname)
+})
 
 // Hide or show the user option on the click of the name (needed for mobile responsivness)
 document.querySelector("#connected-user").addEventListener("click", () => {
@@ -111,12 +117,18 @@ document.querySelector("#disconnect-link").addEventListener("click", async(e) =>
     e.preventDefault()
     try {
         await todoApi.disconnect()
-        window.location.assign("/")
+        router("/")
     } catch (err) {
 
     }    
 })
 
-document.querySelector("#logo").addEventListener("click", (e) => window.location.assign("/"))
+// Add the function to the settings link
+document.querySelector("#settings-link").addEventListener("click", async(e) => {
+    e.preventDefault()
+    router(e.target.pathname)
+})
+
+document.querySelector("#logo").addEventListener("click", (e) => router("/"))
 
 displayUser()

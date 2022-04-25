@@ -42,6 +42,12 @@ export default class Register extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
+        document.querySelectorAll("#page-content a").forEach(a => {
+            a.addEventListener("click", (e) => {
+                e.preventDefault()
+                router(a.pathname)
+            })
+        })
         this.#button = document.querySelector("#submit")
         this.#form = document.querySelector("#register")
         if(!(this.#button && this.#form)) return
