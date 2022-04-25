@@ -37,7 +37,29 @@ export default class Settings extends AbstractView {
      * @returns 
      */
     async executeViewScript(router) {
-    
+        const tabsLinks = document.querySelectorAll(".tab-header a")
+        tabsLinks.forEach(a => {
+            a.addEventListener("click", (e) => {
+                e.preventDefault()
+                window.history.pushState({}, "newUrl", a.href)
+                this.#showTab(a)
+            })
+        })
+    }
+
+    /**
+     * 
+     * @param {HTMLAnchorElement} a 
+     */
+    #showTab(a) {
+        const tabDiv = a.parentNode.parentNode.parentNode
+        if(a.parentNode.classList.contains("active")) return false
+
+        const activeLink = tabDiv.querySelector(".tab-header .active")
+        console.log(activeLink)
+        activeLink.classList.remove("active")
+        console.log(a.parentNode)
+        a.parentNode.classList.add("active")
     }
 
 }

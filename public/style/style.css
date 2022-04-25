@@ -398,6 +398,50 @@ div.info li::before {
     text-align: left;
 }
 
+.tab {
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-header {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.tab-header a {
+    text-decoration: none;
+    background: rgb(209, 60, 60);
+    background: var(--headerBackgroundColor);
+    color: white;
+    padding: 10px 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24);
+}
+
+.tab-header .active a {
+    background-color: #000000;
+}
+
+.tab-header li {
+    list-style-type: none;
+}
+
+.tab-contents {
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24);
+    text-align: left;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
 @media only screen and (min-width: 800px) {
     #todo-list-content {
         flex-direction: row;
