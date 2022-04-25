@@ -19,8 +19,10 @@ app.use("/static", express.static("public"))
 // User
 app.post("/api/register", usersManagement.registerUser)
 app.post("/api/login", usersManagement.loginUser)
-app.delete("/api/deleteUser", auth, usersManagement.deleteUser)
 app.post("/api/disconnect", auth, usersManagement.disconnectUser)
+app.put("/api/updateUser", auth, usersManagement.updateUser)
+app.delete("/api/deleteUser", auth, usersManagement.deleteUser)
+
 
 // Todo
 app.get("/api/todoList", auth, todoManagement.getTodoList)

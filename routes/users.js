@@ -118,6 +118,19 @@ exports.disconnectUser = async function(req, res) {
 }
 
 /**
+ * Update an existing user
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+exports.updateUser = async function(req, res) {
+    const userId = req.userId
+    const {username, password, email} = req.body
+    console.log(`username: ${username}`)
+    console.log(`password: ${password}`)
+    console.log(`email: ${email}`)
+}
+
+/**
  * Delete an existing user
  * @param {Request} req 
  * @param {Response} res 
@@ -125,7 +138,7 @@ exports.disconnectUser = async function(req, res) {
 exports.deleteUser = async function(req, res) {
     try {
         const userId = req.userId
-        if (!id) {
+        if (!userId) {
             return res.status(400).send("Id not valid")
         }
         const nbUserDeleted = await userDao.deleteUser(id)
