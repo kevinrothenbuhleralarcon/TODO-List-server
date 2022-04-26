@@ -103,7 +103,7 @@ export default class TodoApi {
     /**
      * API call for updating the connected user
      * @param {User}
-     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false
      */
     async updateUser(user) {
         try {
@@ -120,6 +120,7 @@ export default class TodoApi {
                 this.#connectionChanged(data.username)
                 return {
                     ok: true,
+                    value: data.res
                 }
             } else {
                 const data = await response.text()
