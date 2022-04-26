@@ -2,6 +2,7 @@
 
 import AbstractView from "../abstractView.js"
 import TodoApi from "../../todoApi.js"
+import User from "../../../model/user.js"
 
 export default class Settings extends AbstractView {
 
@@ -68,7 +69,7 @@ export default class Settings extends AbstractView {
             })
         })
 
-        document.querySelector("#submit").addEventListener("click", (e) => {
+        document.querySelector("#submit").addEventListener("click", async (e) => {
             e.preventDefault()
             this.#cleanErrorMessage()
             if(this.#activeTab !== "#delete") {
@@ -76,10 +77,18 @@ export default class Settings extends AbstractView {
                 if (errors.length > 0) return this.#displayError(errors)
             }
             
-            this.#updateUser()
+            const response = await this.#updateUser()
+            if (response.ok) {
+                router("/")
+            } else {
+                this.#displayError([response.value])
+            }
         })
     }    
     
+    /**
+     * Load the user if not already loaded and set the username and email
+     */
     async #displayUserInfo() {
         if(this.#user === null ) {
             // load the user info
@@ -160,7 +169,9 @@ export default class Settings extends AbstractView {
             case "#password":
                 /** @type {HTMLInputElement} */
                 const oldPassword = document.querySelector("#input-old-password")
+                /** @type {HTMLInputElement} */
                 const inputPassword1 = document.querySelector(`#input-password`)
+                /** @type {HTMLInputElement} */
                 const inputPassword2 = document.querySelector(`#input-password2`)
 
                 if(oldPassword.validity.valueMissing || inputPassword1.validity.valueMissing || inputPassword2.validity.valueMissing) {
@@ -183,7 +194,7 @@ export default class Settings extends AbstractView {
                 }
                 break;
             default:
-                console.log("not a tab")
+                console.log("Not a tab")
         }
 
         return errors
@@ -205,7 +216,38 @@ export default class Settings extends AbstractView {
         formContent.insertBefore(this.#errorDiv, formContent.firstChild)
     }
 
-    #updateUser() {
+    /**
+     * Make the API call
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+    async #updateUser() {
+        /** @type {?User} */
+        let user = null
+        switch (this.#activeTab) {
+            case "#username":
+                /** @type {HTMLInputElement} */
+                const inputUsername = document.querySelector(`#input-username`)
+                user = new User(inputUsername.value, null, null, null)
+                break;
+            
+            case "#password":
+                /** @type {HTMLInputElement} */
+                const oldPassword = document.querySelector("#input-old-password")
+                /** @type {HTMLInputElement} */
+                const inputPassword1 = document.querySelector(`#input-password`)
+                user = new User(null, null, oldPassword.value, inputPassword1.value)
+                break;
 
+            case "#email":
+                /** @type {HTMLInputElement} */
+                const inputEmail = document.querySelector(`#input-email`)
+                user = new User(null, inputEmail.value, null, null)
+                break;
+            default:
+                console.log("Not a tab")
+        }
+
+        if (user === null) return
+        return await this.#todoApi.updateUser(user)
     }
 }
