@@ -166,8 +166,8 @@ exports.updateUser = async function(req, res) {
 
         if(newPassword !== undefined && newPassword !== null) {
             if (!await bcrypt.compare(oldPassword, user.password)) return res.status(400).send("Wrong password")
-            if (!validatePassword(password)) return res.status(400).send("Invalid password template")
-            const encryptedPassword = await bcrypt.hash(password, 10)
+            if (!validatePassword(newPassword)) return res.status(400).send("Invalid password template")
+            const encryptedPassword = await bcrypt.hash(newPassword, 10)
             user.password = encryptedPassword
         }
         
