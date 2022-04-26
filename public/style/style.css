@@ -238,6 +238,12 @@ header.with-height {
     margin-bottom: 10px;
 }
 
+.success {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 div.info {
     color: var(--cardTextInfoColor);
     margin-top: 10px;
