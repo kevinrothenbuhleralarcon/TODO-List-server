@@ -72,17 +72,32 @@ export default class Settings extends AbstractView {
         document.querySelector("#submit").addEventListener("click", async (e) => {
             e.preventDefault()
             this.#cleanErrorMessage()
-            if(this.#activeTab !== "#delete") {
-                const errors = this.#validateForm()
-                if (errors.length > 0) return this.#displayError(errors)
-            }
+
+            const errors = this.#validateForm()
+            if (errors.length > 0) return this.#displayError(errors)
             
-            const response = await this.#updateUser()
-            if (response.ok) {
-                this.#displaySuccess([response.value])
+            if (this.#activeTab !== "#delete") {
+                const response = await this.#updateUser()
+                if (response.ok) {
+                    this.#user = response.user
+                    this.#displaySuccess([response.value])
+                } else {
+                    this.#displayError([response.value])
+                }
             } else {
-                this.#displayError([response.value])
-            }
+                /** @type {HTMLInputElement} */
+                const inputCurrentPassword = document.querySelector("#input-current-password")
+                try {
+                    const response = await this.#todoApi.deleteUser(inputCurrentPassword.value)
+                    if (response.ok) {
+                        router("/")
+                    } else {
+                        this.#displayError([response.value])
+                    }
+                } catch (err) {
+                    console.log(err)
+                }                
+            }            
         })
     }    
     
@@ -190,9 +205,18 @@ export default class Settings extends AbstractView {
                 const inputEmail = document.querySelector(`#input-email`)
 
                 if(inputEmail.validity.valueMissing) {
-                    errors.push("email cannot be empty")
+                    errors.push("Email cannot be empty")
                 }
                 break;
+            
+            case "#delete":
+                /** @type {HTMLInputElement} */
+                const inputCurrentPassword = document.querySelector("#input-current-password")
+                if (inputCurrentPassword.validity.valueMissing) {
+                    errors.push("You must enter your password")
+                }
+                break;
+
             default:
                 console.log("Not a tab")
         }
@@ -234,7 +258,7 @@ export default class Settings extends AbstractView {
 
     /**
      * Make the API call
-     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     * @returns {Promise<{ok: boolean, value: ?string, user: ?User}>} - return true if the API call was sucessful, otherwise return false
      */
     async #updateUser() {
         /** @type {?User} */
