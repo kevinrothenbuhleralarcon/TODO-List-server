@@ -196,10 +196,14 @@ exports.updateUser = async function(req, res) {
 exports.deleteUser = async function(req, res) {
     try {
         const userId = req.userId
+        const password = req.body.password
         if (!userId) {
             return res.status(400).send("Id not valid")
         }
-        const nbUserDeleted = await userDao.deleteUser(id)
+        if (password === undefined || password === null) return res.status(400).send("You must provide the password")
+        const user = await userDao.getUserById(userId)
+        if (! await bcrypt.compare(password, user.password)) return res.status(400).send("Wrong password")
+        const nbUserDeleted = await userDao.deleteUser(userId)
         if (nbUserDeleted > 0) {
             res.status(200).send("User deleted")
         } else {
