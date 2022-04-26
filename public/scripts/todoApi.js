@@ -103,7 +103,7 @@ export default class TodoApi {
     /**
      * API call for updating the connected user
      * @param {User}
-     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false
+     * @returns {Promise<{ok: boolean, value: ?string, user: ?User}>} - return true if the API call was sucessful, otherwise return false
      */
     async updateUser(user) {
         try {
@@ -120,7 +120,8 @@ export default class TodoApi {
                 this.#connectionChanged(data.username)
                 return {
                     ok: true,
-                    value: data.res
+                    value: data.res,
+                    user: User.fromApi(data)
                 }
             } else {
                 const data = await response.text()
@@ -131,6 +132,34 @@ export default class TodoApi {
             }
         } catch (err) {
             throw err
+        }
+    }
+
+    /**
+     * Delete the currently connected user
+     * @param {String} password 
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+    async deleteUser(password) {
+        try {
+            const response = await fetch("/api/deleteUser",  {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({password : password})
+            })
+            if (response.ok) {
+                return {ok: true}
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                }
+            }
+        } catch (err) {
+            throw(err)
         }
     }
 
