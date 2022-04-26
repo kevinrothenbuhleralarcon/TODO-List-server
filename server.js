@@ -17,6 +17,7 @@ app.use("/static", express.static("public"))
 // API
 
 // User
+app.get("/api/user", auth, usersManagement.getUser)
 app.post("/api/register", usersManagement.registerUser)
 app.post("/api/login", usersManagement.loginUser)
 app.post("/api/disconnect", auth, usersManagement.disconnectUser)

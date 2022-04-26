@@ -120,32 +120,54 @@ exports.disconnectUser = async function(req, res) {
 }
 
 /**
+ * Get info of the connected user
+ * @param {Request} req 
+ * @param {Response} res 
+ */
+
+exports.getUser = async function(req, res) {
+    const userId = req.userId
+    try {
+        const user = await userDao.getUserById(userId)
+        if(user === null) return res.status(400).send("No user")
+        res.status(200).json({
+            username : user.username,
+            email : user.email
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).send("Server error")
+    }    
+}
+
+/**
  * Update an existing user
  * @param {Request} req 
  * @param {Response} res 
  */
 exports.updateUser = async function(req, res) {
     const userId = req.userId
-    const {username, password, email} = req.body
-    if(username === undefined && password === undefined && email === undefined) return res.status(400).send("Nothing to change")
+    const {username, oldPassword, newPassword, email} = req.body
+    if(username === undefined && newPassword === undefined && email === undefined) return res.status(400).send("Nothing to change")
     try {
         const user = await userDao.getUserById(userId)
 
-        if(username !== undefined) {
+        if(username !== undefined && username !== null) {
             const existingUser = await userDao.getUserByUsername(username)
             if(existingUser !== null) return res.status(400).send("Username already in use.")
             user.username = username
         }
 
-        if(email !== undefined) {
+        if(email !== undefined && email !== null) {
             const existingUser = await userDao.getUserByEmail(email)
             if(existingUser !== null) return res.status(400).send("Email already in use.")
             user.email = email
         }
 
-        if(password !== undefined) {
-            if(!validatePassword(password)) return res.status(400).send("Invalid password template")
-            const encryptedPassword = await bcrypt.hash(password, 10)
+        if(newPassword !== undefined && newPassword !== null) {
+            if (!await bcrypt.compare(oldPassword, user.password)) return res.status(400).send("Wrong password")
+            if (!validatePassword(newPassword)) return res.status(400).send("Invalid password template")
+            const encryptedPassword = await bcrypt.hash(newPassword, 10)
             user.password = encryptedPassword
         }
         
@@ -153,7 +175,8 @@ exports.updateUser = async function(req, res) {
         if(update) {
             res.status(200).json({
                 res: "User updated",
-                username : user.username
+                username : user.username,
+                email: user.email
             })
         } else {
             res.status(400).send("Could not update the user")
@@ -173,10 +196,14 @@ exports.updateUser = async function(req, res) {
 exports.deleteUser = async function(req, res) {
     try {
         const userId = req.userId
+        const password = req.body.password
         if (!userId) {
             return res.status(400).send("Id not valid")
         }
-        const nbUserDeleted = await userDao.deleteUser(id)
+        if (password === undefined || password === null) return res.status(400).send("You must provide the password")
+        const user = await userDao.getUserById(userId)
+        if (! await bcrypt.compare(password, user.password)) return res.status(400).send("Wrong password")
+        const nbUserDeleted = await userDao.deleteUser(userId)
         if (nbUserDeleted > 0) {
             res.status(200).send("User deleted")
         } else {

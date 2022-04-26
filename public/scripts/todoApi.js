@@ -1,6 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
 import Todo from "../model/todo.js"
+import User from "../model/user.js"
 
 export default class TodoApi {
 
@@ -81,6 +82,85 @@ export default class TodoApi {
         } catch (err) {
             throw (err)
         }        
+    }
+
+    /**
+     * API call for getting the connected user
+     */
+    async getUser() {
+        try {
+            const response = await fetch("/api/user")
+            if(response.ok) {
+                const data = await response.json()
+                return User.fromApi(data)
+            } 
+                return null
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    /**
+     * API call for updating the connected user
+     * @param {User}
+     * @returns {Promise<{ok: boolean, value: ?string, user: ?User}>} - return true if the API call was sucessful, otherwise return false
+     */
+    async updateUser(user) {
+        try {
+            const response = await fetch("/api/updateUser", {
+                method: "PUT",
+                headers: {
+                    "content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            })
+
+            if(response.ok) {
+                const data = await response.json()
+                this.#connectionChanged(data.username)
+                return {
+                    ok: true,
+                    value: data.res,
+                    user: User.fromApi(data)
+                }
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                }
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+
+    /**
+     * Delete the currently connected user
+     * @param {String} password 
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+    async deleteUser(password) {
+        try {
+            const response = await fetch("/api/deleteUser",  {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({password : password})
+            })
+            if (response.ok) {
+                return {ok: true}
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                }
+            }
+        } catch (err) {
+            throw(err)
+        }
     }
 
     /**

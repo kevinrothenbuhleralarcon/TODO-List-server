@@ -82,7 +82,10 @@ exports.getUserToken = async function (userId) {
             "SELECT token FROM tbl_users WHERE id = ?",
             [userId]
         )
-        return dbToken[0].token
+        if(dbToken.length > 0) {
+            return dbToken[0].token
+        }
+        return null
     } catch (err) {
         console.log(err)
         return null
@@ -151,7 +154,7 @@ exports.deleteUser = function(id) {
             [id],
             (err, result) => {
                 if (err) reject(err)
-                resolve(result)
+                resolve(result.affectedRows)
             }
         )
     })

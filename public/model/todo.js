@@ -20,10 +20,10 @@ export default class Todo {
         lastUpdatedAt,
         tasks = null
     ) {
-        this.id = id,
-        this.title = title,
-        this.createdAt = createdAt,
-        this.lastUpdatedAt = lastUpdatedAt,
+        this.id = id
+        this.title = title
+        this.createdAt = createdAt
+        this.lastUpdatedAt = lastUpdatedAt
         this.tasks = tasks
     }
 
