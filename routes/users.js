@@ -70,7 +70,9 @@ exports.registerUser = async function(req, res) {
  */
 exports.loginUser = async function(req, res) {
     try {
+        console.log("try login")
         const {username, password} = req.body
+        console.log(username, password)
         if(!(username && password)) {
             return res.status(400).send("All input are required")
         }
@@ -86,9 +88,10 @@ exports.loginUser = async function(req, res) {
                 secure: true,
                 httpOnly: true
             })
+            console.log("ok")
             return res.status(200).json(generateJsonResponseWithToken(user.username, user.token))
         }
-
+        console.log("Invalid Credential")
         res.status(400).send("Invalid Credential")
     } catch (e) {
         console.log(e)
@@ -239,7 +242,7 @@ const generateToken = function (id, email) {
 const generateJsonResponseWithToken = function (username, token) {
     return {
         "username" : username,
-        "token-lifetime" : process.env.TOKEN_LIFE + "h",
+        "token_lifetime" : process.env.TOKEN_LIFE + "h",
         "token" : token
     }
 }
