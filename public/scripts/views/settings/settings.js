@@ -10,7 +10,7 @@ export default class Settings extends AbstractView {
     #todoApi
 
     /** @type {?HTMLDivElement} */
-    #errorDiv
+    #messageDiv
 
     /** @type {String} */
     #activeTab
@@ -25,7 +25,7 @@ export default class Settings extends AbstractView {
     constructor(todoApi) {
         super("Settings")
         this.#todoApi = todoApi
-        this.#errorDiv = null
+        this.#messageDiv = null
         this.#activeTab = "#username"
         this.#user = null
     }
@@ -79,7 +79,7 @@ export default class Settings extends AbstractView {
             
             const response = await this.#updateUser()
             if (response.ok) {
-                router("/")
+                this.#displaySuccess([response.value])
             } else {
                 this.#displayError([response.value])
             }
@@ -141,9 +141,9 @@ export default class Settings extends AbstractView {
      * Remove the error div if any
      */
      #cleanErrorMessage() {
-        if (this.#errorDiv) {
-            this.#errorDiv.parentElement.removeChild(this.#errorDiv)
-            this.#errorDiv = null
+        if (this.#messageDiv) {
+            this.#messageDiv.parentElement.removeChild(this.#messageDiv)
+            this.#messageDiv = null
         }
     }
 
@@ -208,12 +208,28 @@ export default class Settings extends AbstractView {
         await this.#displayUserInfo()
         /** @type {HTMLDivElement} */
         const formContent = document.querySelector(".form-content")
-        this.#errorDiv = document.createElement("div")
-        this.#errorDiv.classList.add("error")
+        this.#messageDiv = document.createElement("div")
+        this.#messageDiv.classList.add("error")
         errors.forEach(error => {
-            this.#errorDiv.innerHTML += error + "<br>"
+            this.#messageDiv.innerHTML += error + "<br>"
         })        
-        formContent.insertBefore(this.#errorDiv, formContent.firstChild)
+        formContent.insertBefore(this.#messageDiv, formContent.firstChild)
+    }
+
+    /**
+     * Display a success on the form
+     * @param {String[]} success 
+     */
+     async #displaySuccess(success) {
+        await this.#displayUserInfo()
+        /** @type {HTMLDivElement} */
+        const formContent = document.querySelector(".form-content")
+        this.#messageDiv = document.createElement("div")
+        this.#messageDiv.classList.add("success")
+        success.forEach(error => {
+            this.#messageDiv.innerHTML += error + "<br>"
+        })        
+        formContent.insertBefore(this.#messageDiv, formContent.firstChild)
     }
 
     /**
@@ -236,6 +252,7 @@ export default class Settings extends AbstractView {
                 /** @type {HTMLInputElement} */
                 const inputPassword1 = document.querySelector(`#input-password`)
                 user = new User(null, null, oldPassword.value, inputPassword1.value)
+                this.#cleanPasswordFields()
                 break;
 
             case "#email":
@@ -249,5 +266,14 @@ export default class Settings extends AbstractView {
 
         if (user === null) return
         return await this.#todoApi.updateUser(user)
+    }
+
+    /**
+     * Remove the content of the passwords fields
+     */
+    #cleanPasswordFields() {
+        document.querySelector("#input-old-password").value = ""
+        document.querySelector(`#input-password`).value = ""
+        document.querySelector(`#input-password2`).value = ""
     }
 }
