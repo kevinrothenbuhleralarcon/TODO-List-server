@@ -101,6 +101,39 @@ export default class TodoApi {
     }
 
     /**
+     * API call for updating the connected user
+     * @param {User}
+     * @returns {Promise<{ok: boolean, value: ?string}>} - return true if the API call was sucessful, otherwise return false with the error message
+     */
+    async updateUser(user) {
+        try {
+            const response = await fetch("/api/updateUser", {
+                method: "PUT",
+                headers: {
+                    "content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            })
+
+            if(response.ok) {
+                const data = await response.json()
+                this.#connectionChanged(data.username)
+                return {
+                    ok: true,
+                }
+            } else {
+                const data = await response.text()
+                return {
+                    ok: false,
+                    value: data
+                }
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+
+    /**
      * API call for user disconnection
      */
     async disconnect() {
