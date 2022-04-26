@@ -147,25 +147,26 @@ exports.getUser = async function(req, res) {
  */
 exports.updateUser = async function(req, res) {
     const userId = req.userId
-    const {username, password, email} = req.body
-    if(username === undefined && password === undefined && email === undefined) return res.status(400).send("Nothing to change")
+    const {username, oldPassword, newPassword, email} = req.body
+    if(username === undefined && newPassword === undefined && email === undefined) return res.status(400).send("Nothing to change")
     try {
         const user = await userDao.getUserById(userId)
 
-        if(username !== undefined) {
+        if(username !== undefined && username !== null) {
             const existingUser = await userDao.getUserByUsername(username)
             if(existingUser !== null) return res.status(400).send("Username already in use.")
             user.username = username
         }
 
-        if(email !== undefined) {
+        if(email !== undefined && email !== null) {
             const existingUser = await userDao.getUserByEmail(email)
             if(existingUser !== null) return res.status(400).send("Email already in use.")
             user.email = email
         }
 
-        if(password !== undefined) {
-            if(!validatePassword(password)) return res.status(400).send("Invalid password template")
+        if(newPassword !== undefined && newPassword !== null) {
+            if (!await bcrypt.compare(oldPassword, user.password)) return res.status(400).send("Wrong password")
+            if (!validatePassword(password)) return res.status(400).send("Invalid password template")
             const encryptedPassword = await bcrypt.hash(password, 10)
             user.password = encryptedPassword
         }
@@ -174,7 +175,8 @@ exports.updateUser = async function(req, res) {
         if(update) {
             res.status(200).json({
                 res: "User updated",
-                username : user.username
+                username : user.username,
+                email: user.email
             })
         } else {
             res.status(400).send("Could not update the user")
