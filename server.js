@@ -8,6 +8,8 @@ const usersManagement = require("./routes/users")
 const todoManagement = require("./routes/todos")
 const auth = require("./middleware/auth")
 const validateTodo = require("./middleware/validateTodo")
+const https = require("https")
+const fs = require("fs")
 
 // Middleware
 app.use(express.json())
@@ -39,6 +41,17 @@ app.get("/*", (req, res) => {
 })
 
 
-app.listen(process.env.PORT, () => {
+/*app.listen(process.env.PORT, () => {
     console.log("Server started")
-})
+})*/
+https
+    .createServer(
+        {
+            key: fs.readFileSync("key.pem"),
+            cert: fs.readFileSync("cert.pem")
+        },
+        app
+        )
+    .listen(process.env.PORT, () => {
+        console.log("Server started")
+    })
