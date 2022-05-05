@@ -94,7 +94,6 @@ window.addEventListener("popstate", () => {
 
 // Handle the page reload
 window.addEventListener("DOMContentLoaded", () => {
-    console.log("dom loaded")
     loadPageContent(window.location.pathname)
 })
 
