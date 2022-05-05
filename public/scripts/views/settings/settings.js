@@ -1,6 +1,6 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
-import AbstractView from "../remove_case_abstractView.js"
+import AbstractView from "../abstractView.js"
 import TodoApi from "../../todoApi.js"
 import User from "../../../model/user.js"
 
@@ -54,7 +54,7 @@ export default class Settings extends AbstractView {
 
     /**
      * 
-     * @param {import("../remove_case_abstractView.js").navigateCallback} router 
+     * @param {import("../abstractView.js").navigateCallback} router 
      * @returns 
      */
     async executeViewScript(router) {

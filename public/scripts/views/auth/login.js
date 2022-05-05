@@ -1,7 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
 import TodoApi from "../../todoApi.js"
-import AbstractView from "../remove_case_abstractView.js"
+import AbstractView from "../abstractView.js"
 
 export default class Login extends AbstractView {
 
@@ -38,7 +38,7 @@ export default class Login extends AbstractView {
 
     /**
      * The script of the view, the router is there for navigation
-     * @param {import("../remove_case_abstractView.js").navigateCallback} router 
+     * @param {import("../abstractView.js").navigateCallback} router 
      * @returns 
      */
     async executeViewScript(router) {
