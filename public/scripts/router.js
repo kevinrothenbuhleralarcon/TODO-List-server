@@ -2,7 +2,7 @@
 
 import TodoApi from "./todoApi.js"
 
-import AbstractView from "./views/abstractView.js"
+import AbstractView from "./views/remove_case_abstractView.js"
 import Login from "./views/auth/login.js"
 import Register from "./views/auth/register.js"
 import TodoList from "./views/todo/list/todoList.js"

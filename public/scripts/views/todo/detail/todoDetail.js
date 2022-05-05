@@ -1,7 +1,7 @@
 /* Author: Kevin Rothenbühler-Alarcon */
 
 import TodoApi from "../../../todoApi.js"
-import AbstractView from "../../abstractView.js"
+import AbstractView from "../../remove_case_abstractView.js"
 import Todo from "../../../../model/todo.js"
 import Task from "../../../../model/task.js"
 
