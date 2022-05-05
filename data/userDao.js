@@ -1,7 +1,7 @@
 /* AUTHOR: Kevin Rothenbühler-Alarcon */
 
 const connection = require("../config/database")
-const User = require("../model/remove_case_user")
+const User = require("../model/user")
 
 // SELECT
 

@@ -3,7 +3,7 @@
 const bcrypt = require("bcryptjs")
 const jsonWebToken = require("jsonwebtoken")
 const userDao = require("../data/userDao")
-const User = require("../model/remove_case_user")
+const User = require("../model/user")
 
 /**
  * Register a new user and send an authentication token
