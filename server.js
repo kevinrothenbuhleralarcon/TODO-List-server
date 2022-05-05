@@ -41,10 +41,10 @@ app.get("/*", (req, res) => {
 })
 
 
-/*app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
     console.log("Server started")
-})*/
-https
+})
+/*https
     .createServer(
         {
             key: fs.readFileSync("key.pem"),
@@ -54,4 +54,4 @@ https
         )
     .listen(process.env.PORT, () => {
         console.log("Server started")
-    })
+    })*/
